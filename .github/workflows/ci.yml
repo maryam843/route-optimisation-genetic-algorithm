@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: tests (${{ matrix.os }}, Python 3.12)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Open MPI (Linux only)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y openmpi-bin libopenmpi-dev
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -e .
+      - name: Install mpi4py (Linux only)
+        if: runner.os == 'Linux'
+        run: pip install -r requirements-mpi.txt
+      - name: Lint
+        run: ruff check .
+      - name: Tests with coverage (MPI tests skip on Windows with a reason)
+        run: pytest -rsx --cov=route_ga --cov-report=term-missing --cov-fail-under=85
+      - name: README commands (smoke)
+        run: |
+          python -m route_ga --help
+          python -m route_ga --map 32 --method 2opt
+          python scripts/check_readme_claims.py
+
+  pii-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan full git history for personal data and secrets
+        run: python scripts/pii_scan.py

@@ -1,0 +1,2 @@
+# MPI island model. Needs an MPI library first (Ubuntu: sudo apt install openmpi-bin libopenmpi-dev)
+mpi4py==4.1.2

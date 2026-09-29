@@ -1,0 +1,7 @@
+-r requirements.txt
+pytest==9.1.1
+pytest-cov==7.1.0
+hypothesis==6.168.3
+ruff==0.16.9
+# only needed to run the 2025 code in the regression tests
+pandas==3.0.6
