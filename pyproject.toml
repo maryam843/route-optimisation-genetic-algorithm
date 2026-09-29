@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "route-ga"
+version = "1.0.0"
+description = "Genetic algorithm, 2-opt and MPI island model for a single-vehicle delivery tour"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Maryam Mahaboob" }]
+dependencies = ["numpy>=2.0"]
+
+[project.optional-dependencies]
+mpi = ["mpi4py>=4.0"]
+figures = ["matplotlib>=3.8"]
+
+[project.scripts]
+route-ga = "route_ga.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["original_2025"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "mpi: needs mpiexec and mpi4py (skipped when unavailable)",
+    "slow: takes more than a few seconds",
+]
+
+[tool.coverage.run]
+source = ["route_ga"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
