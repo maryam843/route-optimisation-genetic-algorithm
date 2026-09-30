@@ -1,0 +1,962 @@
+{
+ "experiment": "anchor_8node",
+ "environment": {
+  "timestamp_utc": "2026-09-29T00:10:07+00:00",
+  "python": "3.12.3",
+  "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "packages": {
+   "numpy": "2.5.3",
+   "matplotlib": "3.11.2",
+   "mpi4py": "4.1.2",
+   "route-ga": "1.0.0"
+  }
+ },
+ "n_nodes": 8,
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "instances_per_seed": 20,
+ "missing_share": 0.19,
+ "ga_config": {
+  "population_size": 50,
+  "generations": 100,
+  "tournament_size": 3,
+  "crossover_rate": 0.9,
+  "mutation_rate": 0.3,
+  "elite_size": 2,
+  "stagnation_limit": 150
+ },
+ "infeasible_optima": 0,
+ "summary": {
+  "nn": {
+   "hits": 12,
+   "instances": 100,
+   "hit_rate_mean": 12.0,
+   "hit_rate_sd": 2.7386127875258306,
+   "mean_gap_pct_feasible": 18676.224989205777
+  },
+  "nn+2opt": {
+   "hits": 68,
+   "instances": 100,
+   "hit_rate_mean": 68.0,
+   "hit_rate_sd": 9.082951062292475,
+   "mean_gap_pct_feasible": 2.8230075507534536
+  },
+  "ga": {
+   "hits": 62,
+   "instances": 100,
+   "hit_rate_mean": 62.0,
+   "hit_rate_sd": 14.404860290887934,
+   "mean_gap_pct_feasible": 4.232351590925671
+  }
+ },
+ "runs": [
+  {
+   "seed": 0,
+   "instance": 0,
+   "optimum": 302.0,
+   "optimum_feasible": true,
+   "nn": 351.0,
+   "nn+2opt": 310.0,
+   "ga": 302.0
+  },
+  {
+   "seed": 0,
+   "instance": 1,
+   "optimum": 232.0,
+   "optimum_feasible": true,
+   "nn": 250.0,
+   "nn+2opt": 246.0,
+   "ga": 246.0
+  },
+  {
+   "seed": 0,
+   "instance": 2,
+   "optimum": 228.0,
+   "optimum_feasible": true,
+   "nn": 244.0,
+   "nn+2opt": 244.0,
+   "ga": 245.0
+  },
+  {
+   "seed": 0,
+   "instance": 3,
+   "optimum": 185.0,
+   "optimum_feasible": true,
+   "nn": 245.0,
+   "nn+2opt": 185.0,
+   "ga": 237.0
+  },
+  {
+   "seed": 0,
+   "instance": 4,
+   "optimum": 178.0,
+   "optimum_feasible": true,
+   "nn": 279.0,
+   "nn+2opt": 204.0,
+   "ga": 178.0
+  },
+  {
+   "seed": 0,
+   "instance": 5,
+   "optimum": 267.0,
+   "optimum_feasible": true,
+   "nn": 279.0,
+   "nn+2opt": 267.0,
+   "ga": 267.0
+  },
+  {
+   "seed": 0,
+   "instance": 6,
+   "optimum": 290.0,
+   "optimum_feasible": true,
+   "nn": 290.0,
+   "nn+2opt": 290.0,
+   "ga": 290.0
+  },
+  {
+   "seed": 0,
+   "instance": 7,
+   "optimum": 203.0,
+   "optimum_feasible": true,
+   "nn": 297.0,
+   "nn+2opt": 203.0,
+   "ga": 224.0
+  },
+  {
+   "seed": 0,
+   "instance": 8,
+   "optimum": 190.0,
+   "optimum_feasible": true,
+   "nn": 253.0,
+   "nn+2opt": 190.0,
+   "ga": 190.0
+  },
+  {
+   "seed": 0,
+   "instance": 9,
+   "optimum": 289.0,
+   "optimum_feasible": true,
+   "nn": 289.0,
+   "nn+2opt": 289.0,
+   "ga": 352.0
+  },
+  {
+   "seed": 0,
+   "instance": 10,
+   "optimum": 228.0,
+   "optimum_feasible": true,
+   "nn": 248.0,
+   "nn+2opt": 228.0,
+   "ga": 228.0
+  },
+  {
+   "seed": 0,
+   "instance": 11,
+   "optimum": 267.0,
+   "optimum_feasible": true,
+   "nn": 200131.0,
+   "nn+2opt": 267.0,
+   "ga": 267.0
+  },
+  {
+   "seed": 0,
+   "instance": 12,
+   "optimum": 258.0,
+   "optimum_feasible": true,
+   "nn": 100196.0,
+   "nn+2opt": 258.0,
+   "ga": 258.0
+  },
+  {
+   "seed": 0,
+   "instance": 13,
+   "optimum": 219.0,
+   "optimum_feasible": true,
+   "nn": 100181.0,
+   "nn+2opt": 219.0,
+   "ga": 219.0
+  },
+  {
+   "seed": 0,
+   "instance": 14,
+   "optimum": 185.0,
+   "optimum_feasible": true,
+   "nn": 100199.0,
+   "nn+2opt": 196.0,
+   "ga": 196.0
+  },
+  {
+   "seed": 0,
+   "instance": 15,
+   "optimum": 217.0,
+   "optimum_feasible": true,
+   "nn": 100133.0,
+   "nn+2opt": 227.0,
+   "ga": 238.0
+  },
+  {
+   "seed": 0,
+   "instance": 16,
+   "optimum": 201.0,
+   "optimum_feasible": true,
+   "nn": 260.0,
+   "nn+2opt": 201.0,
+   "ga": 254.0
+  },
+  {
+   "seed": 0,
+   "instance": 17,
+   "optimum": 179.0,
+   "optimum_feasible": true,
+   "nn": 222.0,
+   "nn+2opt": 212.0,
+   "ga": 212.0
+  },
+  {
+   "seed": 0,
+   "instance": 18,
+   "optimum": 211.0,
+   "optimum_feasible": true,
+   "nn": 100210.0,
+   "nn+2opt": 211.0,
+   "ga": 211.0
+  },
+  {
+   "seed": 0,
+   "instance": 19,
+   "optimum": 123.0,
+   "optimum_feasible": true,
+   "nn": 136.0,
+   "nn+2opt": 136.0,
+   "ga": 136.0
+  },
+  {
+   "seed": 1,
+   "instance": 0,
+   "optimum": 211.0,
+   "optimum_feasible": true,
+   "nn": 247.0,
+   "nn+2opt": 211.0,
+   "ga": 211.0
+  },
+  {
+   "seed": 1,
+   "instance": 1,
+   "optimum": 190.0,
+   "optimum_feasible": true,
+   "nn": 264.0,
+   "nn+2opt": 190.0,
+   "ga": 210.0
+  },
+  {
+   "seed": 1,
+   "instance": 2,
+   "optimum": 253.0,
+   "optimum_feasible": true,
+   "nn": 100205.0,
+   "nn+2opt": 271.0,
+   "ga": 253.0
+  },
+  {
+   "seed": 1,
+   "instance": 3,
+   "optimum": 383.0,
+   "optimum_feasible": true,
+   "nn": 100377.0,
+   "nn+2opt": 424.0,
+   "ga": 399.0
+  },
+  {
+   "seed": 1,
+   "instance": 4,
+   "optimum": 223.0,
+   "optimum_feasible": true,
+   "nn": 247.0,
+   "nn+2opt": 247.0,
+   "ga": 223.0
+  },
+  {
+   "seed": 1,
+   "instance": 5,
+   "optimum": 239.0,
+   "optimum_feasible": true,
+   "nn": 239.0,
+   "nn+2opt": 239.0,
+   "ga": 262.0
+  },
+  {
+   "seed": 1,
+   "instance": 6,
+   "optimum": 281.0,
+   "optimum_feasible": true,
+   "nn": 281.0,
+   "nn+2opt": 281.0,
+   "ga": 281.0
+  },
+  {
+   "seed": 1,
+   "instance": 7,
+   "optimum": 377.0,
+   "optimum_feasible": true,
+   "nn": 100313.0,
+   "nn+2opt": 377.0,
+   "ga": 377.0
+  },
+  {
+   "seed": 1,
+   "instance": 8,
+   "optimum": 305.0,
+   "optimum_feasible": true,
+   "nn": 332.0,
+   "nn+2opt": 332.0,
+   "ga": 332.0
+  },
+  {
+   "seed": 1,
+   "instance": 9,
+   "optimum": 321.0,
+   "optimum_feasible": true,
+   "nn": 347.0,
+   "nn+2opt": 321.0,
+   "ga": 321.0
+  },
+  {
+   "seed": 1,
+   "instance": 10,
+   "optimum": 162.0,
+   "optimum_feasible": true,
+   "nn": 100187.0,
+   "nn+2opt": 175.0,
+   "ga": 162.0
+  },
+  {
+   "seed": 1,
+   "instance": 11,
+   "optimum": 192.0,
+   "optimum_feasible": true,
+   "nn": 250.0,
+   "nn+2opt": 192.0,
+   "ga": 192.0
+  },
+  {
+   "seed": 1,
+   "instance": 12,
+   "optimum": 144.0,
+   "optimum_feasible": true,
+   "nn": 164.0,
+   "nn+2opt": 144.0,
+   "ga": 144.0
+  },
+  {
+   "seed": 1,
+   "instance": 13,
+   "optimum": 241.0,
+   "optimum_feasible": true,
+   "nn": 100175.0,
+   "nn+2opt": 241.0,
+   "ga": 241.0
+  },
+  {
+   "seed": 1,
+   "instance": 14,
+   "optimum": 166.0,
+   "optimum_feasible": true,
+   "nn": 180.0,
+   "nn+2opt": 166.0,
+   "ga": 166.0
+  },
+  {
+   "seed": 1,
+   "instance": 15,
+   "optimum": 131.0,
+   "optimum_feasible": true,
+   "nn": 100120.0,
+   "nn+2opt": 131.0,
+   "ga": 131.0
+  },
+  {
+   "seed": 1,
+   "instance": 16,
+   "optimum": 385.0,
+   "optimum_feasible": true,
+   "nn": 100299.0,
+   "nn+2opt": 395.0,
+   "ga": 385.0
+  },
+  {
+   "seed": 1,
+   "instance": 17,
+   "optimum": 259.0,
+   "optimum_feasible": true,
+   "nn": 288.0,
+   "nn+2opt": 271.0,
+   "ga": 259.0
+  },
+  {
+   "seed": 1,
+   "instance": 18,
+   "optimum": 273.0,
+   "optimum_feasible": true,
+   "nn": 100248.0,
+   "nn+2opt": 282.0,
+   "ga": 293.0
+  },
+  {
+   "seed": 1,
+   "instance": 19,
+   "optimum": 191.0,
+   "optimum_feasible": true,
+   "nn": 191.0,
+   "nn+2opt": 191.0,
+   "ga": 191.0
+  },
+  {
+   "seed": 2,
+   "instance": 0,
+   "optimum": 146.0,
+   "optimum_feasible": true,
+   "nn": 177.0,
+   "nn+2opt": 146.0,
+   "ga": 178.0
+  },
+  {
+   "seed": 2,
+   "instance": 1,
+   "optimum": 243.0,
+   "optimum_feasible": true,
+   "nn": 243.0,
+   "nn+2opt": 243.0,
+   "ga": 243.0
+  },
+  {
+   "seed": 2,
+   "instance": 2,
+   "optimum": 204.0,
+   "optimum_feasible": true,
+   "nn": 216.0,
+   "nn+2opt": 216.0,
+   "ga": 204.0
+  },
+  {
+   "seed": 2,
+   "instance": 3,
+   "optimum": 207.0,
+   "optimum_feasible": true,
+   "nn": 249.0,
+   "nn+2opt": 207.0,
+   "ga": 207.0
+  },
+  {
+   "seed": 2,
+   "instance": 4,
+   "optimum": 187.0,
+   "optimum_feasible": true,
+   "nn": 100195.0,
+   "nn+2opt": 187.0,
+   "ga": 187.0
+  },
+  {
+   "seed": 2,
+   "instance": 5,
+   "optimum": 299.0,
+   "optimum_feasible": true,
+   "nn": 100228.0,
+   "nn+2opt": 299.0,
+   "ga": 299.0
+  },
+  {
+   "seed": 2,
+   "instance": 6,
+   "optimum": 173.0,
+   "optimum_feasible": true,
+   "nn": 100188.0,
+   "nn+2opt": 173.0,
+   "ga": 186.0
+  },
+  {
+   "seed": 2,
+   "instance": 7,
+   "optimum": 168.0,
+   "optimum_feasible": true,
+   "nn": 168.0,
+   "nn+2opt": 168.0,
+   "ga": 168.0
+  },
+  {
+   "seed": 2,
+   "instance": 8,
+   "optimum": 186.0,
+   "optimum_feasible": true,
+   "nn": 200111.0,
+   "nn+2opt": 186.0,
+   "ga": 203.0
+  },
+  {
+   "seed": 2,
+   "instance": 9,
+   "optimum": 233.0,
+   "optimum_feasible": true,
+   "nn": 296.0,
+   "nn+2opt": 233.0,
+   "ga": 233.0
+  },
+  {
+   "seed": 2,
+   "instance": 10,
+   "optimum": 317.0,
+   "optimum_feasible": true,
+   "nn": 100254.0,
+   "nn+2opt": 317.0,
+   "ga": 317.0
+  },
+  {
+   "seed": 2,
+   "instance": 11,
+   "optimum": 143.0,
+   "optimum_feasible": true,
+   "nn": 146.0,
+   "nn+2opt": 143.0,
+   "ga": 143.0
+  },
+  {
+   "seed": 2,
+   "instance": 12,
+   "optimum": 342.0,
+   "optimum_feasible": true,
+   "nn": 200213.0,
+   "nn+2opt": 342.0,
+   "ga": 376.0
+  },
+  {
+   "seed": 2,
+   "instance": 13,
+   "optimum": 315.0,
+   "optimum_feasible": true,
+   "nn": 100254.0,
+   "nn+2opt": 337.0,
+   "ga": 337.0
+  },
+  {
+   "seed": 2,
+   "instance": 14,
+   "optimum": 208.0,
+   "optimum_feasible": true,
+   "nn": 243.0,
+   "nn+2opt": 208.0,
+   "ga": 224.0
+  },
+  {
+   "seed": 2,
+   "instance": 15,
+   "optimum": 150.0,
+   "optimum_feasible": true,
+   "nn": 150.0,
+   "nn+2opt": 150.0,
+   "ga": 162.0
+  },
+  {
+   "seed": 2,
+   "instance": 16,
+   "optimum": 205.0,
+   "optimum_feasible": true,
+   "nn": 100242.0,
+   "nn+2opt": 205.0,
+   "ga": 205.0
+  },
+  {
+   "seed": 2,
+   "instance": 17,
+   "optimum": 229.0,
+   "optimum_feasible": true,
+   "nn": 278.0,
+   "nn+2opt": 252.0,
+   "ga": 274.0
+  },
+  {
+   "seed": 2,
+   "instance": 18,
+   "optimum": 187.0,
+   "optimum_feasible": true,
+   "nn": 220.0,
+   "nn+2opt": 217.0,
+   "ga": 187.0
+  },
+  {
+   "seed": 2,
+   "instance": 19,
+   "optimum": 306.0,
+   "optimum_feasible": true,
+   "nn": 200159.0,
+   "nn+2opt": 306.0,
+   "ga": 328.0
+  },
+  {
+   "seed": 3,
+   "instance": 0,
+   "optimum": 232.0,
+   "optimum_feasible": true,
+   "nn": 100180.0,
+   "nn+2opt": 232.0,
+   "ga": 232.0
+  },
+  {
+   "seed": 3,
+   "instance": 1,
+   "optimum": 192.0,
+   "optimum_feasible": true,
+   "nn": 100187.0,
+   "nn+2opt": 192.0,
+   "ga": 192.0
+  },
+  {
+   "seed": 3,
+   "instance": 2,
+   "optimum": 186.0,
+   "optimum_feasible": true,
+   "nn": 187.0,
+   "nn+2opt": 186.0,
+   "ga": 186.0
+  },
+  {
+   "seed": 3,
+   "instance": 3,
+   "optimum": 274.0,
+   "optimum_feasible": true,
+   "nn": 274.0,
+   "nn+2opt": 274.0,
+   "ga": 274.0
+  },
+  {
+   "seed": 3,
+   "instance": 4,
+   "optimum": 269.0,
+   "optimum_feasible": true,
+   "nn": 200167.0,
+   "nn+2opt": 269.0,
+   "ga": 269.0
+  },
+  {
+   "seed": 3,
+   "instance": 5,
+   "optimum": 233.0,
+   "optimum_feasible": true,
+   "nn": 273.0,
+   "nn+2opt": 233.0,
+   "ga": 233.0
+  },
+  {
+   "seed": 3,
+   "instance": 6,
+   "optimum": 204.0,
+   "optimum_feasible": true,
+   "nn": 100195.0,
+   "nn+2opt": 230.0,
+   "ga": 217.0
+  },
+  {
+   "seed": 3,
+   "instance": 7,
+   "optimum": 287.0,
+   "optimum_feasible": true,
+   "nn": 310.0,
+   "nn+2opt": 288.0,
+   "ga": 287.0
+  },
+  {
+   "seed": 3,
+   "instance": 8,
+   "optimum": 188.0,
+   "optimum_feasible": true,
+   "nn": 236.0,
+   "nn+2opt": 188.0,
+   "ga": 188.0
+  },
+  {
+   "seed": 3,
+   "instance": 9,
+   "optimum": 145.0,
+   "optimum_feasible": true,
+   "nn": 208.0,
+   "nn+2opt": 145.0,
+   "ga": 145.0
+  },
+  {
+   "seed": 3,
+   "instance": 10,
+   "optimum": 279.0,
+   "optimum_feasible": true,
+   "nn": 324.0,
+   "nn+2opt": 279.0,
+   "ga": 279.0
+  },
+  {
+   "seed": 3,
+   "instance": 11,
+   "optimum": 192.0,
+   "optimum_feasible": true,
+   "nn": 211.0,
+   "nn+2opt": 211.0,
+   "ga": 221.0
+  },
+  {
+   "seed": 3,
+   "instance": 12,
+   "optimum": 188.0,
+   "optimum_feasible": true,
+   "nn": 200072.0,
+   "nn+2opt": 188.0,
+   "ga": 196.0
+  },
+  {
+   "seed": 3,
+   "instance": 13,
+   "optimum": 192.0,
+   "optimum_feasible": true,
+   "nn": 192.0,
+   "nn+2opt": 192.0,
+   "ga": 196.0
+  },
+  {
+   "seed": 3,
+   "instance": 14,
+   "optimum": 238.0,
+   "optimum_feasible": true,
+   "nn": 253.0,
+   "nn+2opt": 238.0,
+   "ga": 238.0
+  },
+  {
+   "seed": 3,
+   "instance": 15,
+   "optimum": 165.0,
+   "optimum_feasible": true,
+   "nn": 179.0,
+   "nn+2opt": 165.0,
+   "ga": 165.0
+  },
+  {
+   "seed": 3,
+   "instance": 16,
+   "optimum": 256.0,
+   "optimum_feasible": true,
+   "nn": 100197.0,
+   "nn+2opt": 294.0,
+   "ga": 256.0
+  },
+  {
+   "seed": 3,
+   "instance": 17,
+   "optimum": 280.0,
+   "optimum_feasible": true,
+   "nn": 100225.0,
+   "nn+2opt": 282.0,
+   "ga": 280.0
+  },
+  {
+   "seed": 3,
+   "instance": 18,
+   "optimum": 174.0,
+   "optimum_feasible": true,
+   "nn": 100108.0,
+   "nn+2opt": 174.0,
+   "ga": 174.0
+  },
+  {
+   "seed": 3,
+   "instance": 19,
+   "optimum": 205.0,
+   "optimum_feasible": true,
+   "nn": 220.0,
+   "nn+2opt": 205.0,
+   "ga": 205.0
+  },
+  {
+   "seed": 4,
+   "instance": 0,
+   "optimum": 211.0,
+   "optimum_feasible": true,
+   "nn": 295.0,
+   "nn+2opt": 240.0,
+   "ga": 211.0
+  },
+  {
+   "seed": 4,
+   "instance": 1,
+   "optimum": 217.0,
+   "optimum_feasible": true,
+   "nn": 260.0,
+   "nn+2opt": 217.0,
+   "ga": 239.0
+  },
+  {
+   "seed": 4,
+   "instance": 2,
+   "optimum": 248.0,
+   "optimum_feasible": true,
+   "nn": 100130.0,
+   "nn+2opt": 248.0,
+   "ga": 291.0
+  },
+  {
+   "seed": 4,
+   "instance": 3,
+   "optimum": 263.0,
+   "optimum_feasible": true,
+   "nn": 288.0,
+   "nn+2opt": 263.0,
+   "ga": 269.0
+  },
+  {
+   "seed": 4,
+   "instance": 4,
+   "optimum": 255.0,
+   "optimum_feasible": true,
+   "nn": 265.0,
+   "nn+2opt": 255.0,
+   "ga": 282.0
+  },
+  {
+   "seed": 4,
+   "instance": 5,
+   "optimum": 244.0,
+   "optimum_feasible": true,
+   "nn": 100182.0,
+   "nn+2opt": 244.0,
+   "ga": 244.0
+  },
+  {
+   "seed": 4,
+   "instance": 6,
+   "optimum": 180.0,
+   "optimum_feasible": true,
+   "nn": 203.0,
+   "nn+2opt": 180.0,
+   "ga": 180.0
+  },
+  {
+   "seed": 4,
+   "instance": 7,
+   "optimum": 161.0,
+   "optimum_feasible": true,
+   "nn": 185.0,
+   "nn+2opt": 185.0,
+   "ga": 161.0
+  },
+  {
+   "seed": 4,
+   "instance": 8,
+   "optimum": 181.0,
+   "optimum_feasible": true,
+   "nn": 187.0,
+   "nn+2opt": 187.0,
+   "ga": 181.0
+  },
+  {
+   "seed": 4,
+   "instance": 9,
+   "optimum": 201.0,
+   "optimum_feasible": true,
+   "nn": 100142.0,
+   "nn+2opt": 201.0,
+   "ga": 210.0
+  },
+  {
+   "seed": 4,
+   "instance": 10,
+   "optimum": 280.0,
+   "optimum_feasible": true,
+   "nn": 302.0,
+   "nn+2opt": 302.0,
+   "ga": 280.0
+  },
+  {
+   "seed": 4,
+   "instance": 11,
+   "optimum": 199.0,
+   "optimum_feasible": true,
+   "nn": 277.0,
+   "nn+2opt": 199.0,
+   "ga": 256.0
+  },
+  {
+   "seed": 4,
+   "instance": 12,
+   "optimum": 215.0,
+   "optimum_feasible": true,
+   "nn": 215.0,
+   "nn+2opt": 215.0,
+   "ga": 215.0
+  },
+  {
+   "seed": 4,
+   "instance": 13,
+   "optimum": 337.0,
+   "optimum_feasible": true,
+   "nn": 100237.0,
+   "nn+2opt": 347.0,
+   "ga": 347.0
+  },
+  {
+   "seed": 4,
+   "instance": 14,
+   "optimum": 289.0,
+   "optimum_feasible": true,
+   "nn": 100231.0,
+   "nn+2opt": 289.0,
+   "ga": 289.0
+  },
+  {
+   "seed": 4,
+   "instance": 15,
+   "optimum": 197.0,
+   "optimum_feasible": true,
+   "nn": 197.0,
+   "nn+2opt": 197.0,
+   "ga": 197.0
+  },
+  {
+   "seed": 4,
+   "instance": 16,
+   "optimum": 253.0,
+   "optimum_feasible": true,
+   "nn": 100217.0,
+   "nn+2opt": 254.0,
+   "ga": 256.0
+  },
+  {
+   "seed": 4,
+   "instance": 17,
+   "optimum": 151.0,
+   "optimum_feasible": true,
+   "nn": 205.0,
+   "nn+2opt": 205.0,
+   "ga": 200.0
+  },
+  {
+   "seed": 4,
+   "instance": 18,
+   "optimum": 434.0,
+   "optimum_feasible": true,
+   "nn": 200279.0,
+   "nn+2opt": 434.0,
+   "ga": 443.0
+  },
+  {
+   "seed": 4,
+   "instance": 19,
+   "optimum": 183.0,
+   "optimum_feasible": true,
+   "nn": 269.0,
+   "nn+2opt": 183.0,
+   "ga": 183.0
+  }
+ ]
+}

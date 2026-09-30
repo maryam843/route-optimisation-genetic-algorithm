@@ -1,0 +1,178 @@
+{
+ "experiment": "tuning",
+ "environment": {
+  "timestamp_utc": "2026-09-29T00:09:43+00:00",
+  "python": "3.12.3",
+  "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "packages": {
+   "numpy": "2.5.3",
+   "matplotlib": "3.11.2",
+   "mpi4py": "4.1.2",
+   "route-ga": "1.0.0"
+  }
+ },
+ "map": 32,
+ "seeds": [
+  100,
+  101,
+  102
+ ],
+ "generations": 500,
+ "base_config": {
+  "population_size": 200,
+  "generations": 500,
+  "tournament_size": 3,
+  "crossover_rate": 0.9,
+  "mutation_rate": 0.3,
+  "elite_size": 2,
+  "stagnation_limit": 150
+ },
+ "grid": [
+  {
+   "tournament_size": 2,
+   "mutation_rate": 0.1,
+   "costs": [
+    573.0,
+    630.0,
+    522.0
+   ],
+   "mean": 575.0,
+   "sd": 54.0277706369604
+  },
+  {
+   "tournament_size": 2,
+   "mutation_rate": 0.3,
+   "costs": [
+    704.0,
+    740.0,
+    714.0
+   ],
+   "mean": 719.3333333333334,
+   "sd": 18.58314648635514
+  },
+  {
+   "tournament_size": 2,
+   "mutation_rate": 0.6,
+   "costs": [
+    873.0,
+    801.0,
+    752.0
+   ],
+   "mean": 808.6666666666666,
+   "sd": 60.86323466045272
+  },
+  {
+   "tournament_size": 2,
+   "mutation_rate": 0.9,
+   "costs": [
+    836.0,
+    681.0,
+    795.0
+   ],
+   "mean": 770.6666666666666,
+   "sd": 80.31396723692171
+  },
+  {
+   "tournament_size": 3,
+   "mutation_rate": 0.1,
+   "costs": [
+    559.0,
+    585.0,
+    630.0
+   ],
+   "mean": 591.3333333333334,
+   "sd": 35.92121007612819
+  },
+  {
+   "tournament_size": 3,
+   "mutation_rate": 0.3,
+   "costs": [
+    495.0,
+    550.0,
+    506.0
+   ],
+   "mean": 517.0,
+   "sd": 29.103264421710495
+  },
+  {
+   "tournament_size": 3,
+   "mutation_rate": 0.6,
+   "costs": [
+    551.0,
+    634.0,
+    591.0
+   ],
+   "mean": 592.0,
+   "sd": 41.50903516103452
+  },
+  {
+   "tournament_size": 3,
+   "mutation_rate": 0.9,
+   "costs": [
+    751.0,
+    626.0,
+    696.0
+   ],
+   "mean": 691.0,
+   "sd": 62.64982043070834
+  },
+  {
+   "tournament_size": 5,
+   "mutation_rate": 0.1,
+   "costs": [
+    555.0,
+    557.0,
+    577.0
+   ],
+   "mean": 563.0,
+   "sd": 12.165525060596439
+  },
+  {
+   "tournament_size": 5,
+   "mutation_rate": 0.3,
+   "costs": [
+    641.0,
+    500.0,
+    575.0
+   ],
+   "mean": 572.0,
+   "sd": 70.54785609782908
+  },
+  {
+   "tournament_size": 5,
+   "mutation_rate": 0.6,
+   "costs": [
+    493.0,
+    558.0,
+    542.0
+   ],
+   "mean": 531.0,
+   "sd": 33.8673884437522
+  },
+  {
+   "tournament_size": 5,
+   "mutation_rate": 0.9,
+   "costs": [
+    528.0,
+    571.0,
+    587.0
+   ],
+   "mean": 562.0,
+   "sd": 30.512292604784715
+  }
+ ],
+ "best": {
+  "tournament_size": 3,
+  "mutation_rate": 0.3,
+  "costs": [
+   495.0,
+   550.0,
+   506.0
+  ],
+  "mean": 517.0,
+  "sd": 29.103264421710495
+ }
+}
