@@ -1,7 +1,7 @@
 # Data
 
-Both files were provided by DSAI3202 course staff (UDST, Spring 2025).
-Modified by me: no. They are kept byte for byte as supplied.
+Provided by DSAI3202 course staff (UDST, Spring 2025). Modified by me: no
+(both files are kept byte for byte as supplied).
 
 | File | Size | Nodes | Missing edges (cells equal to 100000) |
 |---|---|---|---|
