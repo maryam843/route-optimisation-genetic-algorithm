@@ -24,9 +24,9 @@ Tournament selection, size 3, lowest cost wins, contestants drawn without
 replacement.
 **Why:** it only compares costs, so it does not care about the scale of the
 penalty (roulette-wheel selection would be dominated by it). Size 3 came out
-best in a small grid (`results/tuning.json`, 3 tuning seeds that are not used
-in any reported result). Drawing without replacement makes a tournament of
-the whole population return the best individual, which a unit test checks.
+best in a small grid (see Tuning below). Drawing without replacement makes a
+tournament of the whole population return the best individual, which a unit
+test checks.
 
 ## Crossover
 Order crossover (OX), the same variant as the course code, rate 0.9.
@@ -37,7 +37,7 @@ I kept the course variant so the 2025 and 2026 operators can be compared.
 ## Mutation
 Swap two random positions with probability 0.3 per child. Returns a copy.
 **Why:** swap mutation was the course operator and the brief asked for it.
-0.3 was best of {0.1, 0.3, 0.6, 0.9} in the tuning grid. The 2025 `mutate`
+0.3 was best of {0.1, 0.3, 0.6, 0.9} in the tuning grid (see Tuning below). The 2025 `mutate`
 changed its input in place, which is easy to get wrong with shared parents, so
 the new one copies. I know an inversion (2-opt style) mutation would fit TSP
 better; I did not add it so the GA stays the one described in the brief, and
@@ -88,6 +88,36 @@ search), and each island is one MPI process on the same machine.
 in about the time of one. To get a fair speed-up number I also run the same
 islands one after another in one process and compare the times; the results
 are identical, so the speed-up is for the same computation.
+
+## Tuning
+A grid of tournament size {2, 3, 5} x mutation rate {0.1, 0.3, 0.6, 0.9},
+500 generations, 3 seeds (100, 101, 102), on the 32-node map; saved in
+`results/tuning.json`.
+**Why and what to be careful about:** I set the defaults (tournament 3,
+mutation 0.3) when I first wrote `ga.py`, before running the grid; the grid
+then picked the same pair, so I kept them. The grid used seeds that are not
+used in any reported result, but it did use the same 32-node map as the
+reported results, so the 32-node GA numbers are slightly optimistic. The
+100-node map was not used for tuning. This is also stated in the README
+limitations. Other settings (population 200, elitism 2, restart after 150,
+crossover rate 0.9, migration every 25 with 2 migrants) were chosen, not tuned.
+
+## Reference solver
+Google OR-Tools routing (cheapest-arc start, then guided local search) with a
+30-second time limit, run 5 times per map; saved in
+`results/reference_ortools.json`.
+**Why:** "best known in this study" means little if every method is weak.
+OR-Tools is a widely used routing solver, so its tour is a much stronger
+yardstick. It stops at a time limit and gives no optimality proof, so it is
+always labelled "reference solver, not proven optimal". It uses the same
+100,000 missing-edge penalty as my code.
+
+## Timing
+Every timing is repeated at least 5 times and reported as the median with
+the interquartile range (IQR). Map runs: one run per seed, 5 seeds. Fitness
+benchmark: 5 repeats for each of 5 seeds, after warming the pool.
+**Why:** the machine is a shared cloud VM, so single timings are noisy; the
+median and IQR are less sensitive to one slow run than a mean.
 
 ## Baselines
 Nearest neighbour from the depot, the same tour improved by 2-opt, and exact
