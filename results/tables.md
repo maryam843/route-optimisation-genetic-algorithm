@@ -60,7 +60,7 @@
 <!-- END:anchor -->
 
 <!-- BEGIN:fitness -->
-| Population | Python loop, 1 process | Python loop, 4-process pool | NumPy, 1 process | NumPy, 4-process pool | Whole GA generation |
+| Population | Python loop, 1 process (ms) | Python loop, 4-process pool (ms) | NumPy, 1 process (ms) | NumPy, 4-process pool (ms) | Whole GA generation (ms) |
 |---:|---:|---:|---:|---:|---:|
 | 500 | 2.5 [2.4-2.7] | 2.6 [2.3-3.4] | 0.2 [0.2-0.3] | 2.1 [1.9-3.6] | 20.0 [19.5-21.0] |
 | 2,000 | 10.0 [9.6-10.5] | 7.5 [6.4-8.4] | 1.2 [1.2-1.4] | 4.2 [3.8-4.7] | 80.2 [71.4-93.5] |

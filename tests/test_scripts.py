@@ -89,11 +89,14 @@ def test_claims_checker_catches_problems(tmp_path):
     name = next(iter(blocks))
     readme.write_text(
         f"<!-- BEGIN:{name} -->\n| wrong |\n<!-- END:{name} -->\n"
-        "The GA finds the optimal route — on a fleet of vans.\n", encoding="utf-8")
+        "The GA finds the optimal route \u2014 on a fleet of vans.\n"
+        "It found a tour of 12,347 in 3.14159 s, tested on Windows.\n", encoding="utf-8")
     errors = check_readme_claims.check(readme, ROOT / "results")
     joined = "\n".join(errors)
     assert "README differs" in joined
     assert "optimal" in joined and "multi-vehicle" in joined and "em dash" in joined
+    assert "number 12,347 not found" in joined and "number 3.14159 not found" in joined
+    assert "tested on windows" in joined.lower()
     assert check_readme_claims.main(["--readme", str(readme)]) == 1
 
 

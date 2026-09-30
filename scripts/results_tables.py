@@ -159,8 +159,8 @@ def table_anchor(res: dict) -> str:
 
 def table_fitness(res: dict) -> str:
     lines = [
-        "| Population | Python loop, 1 process | Python loop, 4-process pool | "
-        "NumPy, 1 process | NumPy, 4-process pool | Whole GA generation |",
+        "| Population | Python loop, 1 process (ms) | Python loop, 4-process pool (ms) | "
+        "NumPy, 1 process (ms) | NumPy, 4-process pool (ms) | Whole GA generation (ms) |",
         "|---:|---:|---:|---:|---:|---:|",
     ]
 

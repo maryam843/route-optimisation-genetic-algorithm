@@ -138,11 +138,14 @@ def allowed_numbers(results: Path) -> set[str]:
         acc |= {m.group(0).lstrip("-") for m in NUMBER.finditer(table)}
     for v in derived(results).values():
         acc |= _variants(float(v))
-    from route_ga.data import DATA_DIR, MAP_FILES, load_map, missing_mask
+    from route_ga.data import DATA_DIR, MAP_FILES, MISSING_EDGE, load_map, missing_mask
 
+    acc |= _variants(MISSING_EDGE)
     for n, f in MAP_FILES.items():
         d = load_map(n)
+        real = d[~missing_mask(d) & (d > 0)]
         acc |= _variants(n) | _variants(int(missing_mask(d).sum()))
+        acc |= _variants(real.min()) | _variants(real.max())
         acc |= _variants((DATA_DIR / f).stat().st_size)
     acc |= set(CITED)
     return acc
