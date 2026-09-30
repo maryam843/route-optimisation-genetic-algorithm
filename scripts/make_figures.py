@@ -16,7 +16,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
-from route_ga.data import load_map, missing_mask  # noqa: E402
+from route_ga.data import MISSING_EDGE, load_map, missing_mask  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -50,27 +50,30 @@ def load(results: Path, name: str) -> dict | None:
 
 def convergence(res: dict, out: Path) -> Path:
     fig, ax = plt.subplots(figsize=(7.5, 4.2))
-    for method, color in SERIES.items():
-        hs = np.array([r["history"] for r in res["runs"] if r["method"] == method], dtype=float)
-        if hs.size == 0:
-            continue
-        mu, sd = hs.mean(axis=0), hs.std(axis=0, ddof=1) if len(hs) > 1 else 0 * hs[0]
-        g = np.arange(len(mu))
-        ax.fill_between(g, np.maximum(mu - sd, 1), mu + sd, color=color, alpha=0.15, lw=0)
-        ax.plot(g, mu, color=color, lw=2, label=LABELS[method])
-        ax.annotate(f"{mu[-1]:,.0f}", (g[-1], mu[-1]), xytext=(4, 0),
-                    textcoords="offset points", va="center", fontsize=8, color=INK)
+    series = {m: np.array([r["history"] for r in res["runs"] if r["method"] == m], dtype=float)
+              for m in SERIES}
+    series = {m: h for m, h in series.items() if h.size}
+    # Start where every run of every series has a feasible best tour.
+    start = max(int(np.argmax((h < MISSING_EDGE).all(axis=0))) for h in series.values())
+    for method, hs in series.items():
+        color = SERIES[method]
+        mu = hs.mean(axis=0)
+        sd = hs.std(axis=0, ddof=1) if len(hs) > 1 else np.zeros_like(mu)
+        g = np.arange(len(mu))[start:]
+        ax.fill_between(g, (mu - sd)[start:], (mu + sd)[start:], color=color, alpha=0.12, lw=0)
+        ax.plot(g, mu[start:], color=color, lw=2,
+                label=f"{LABELS[method]} (final {mu[-1]:,.0f})")
     nn2 = res["summary"]["nn+2opt"]["mean"]
     ax.axhline(nn2, color=MUTED, lw=1, ls="--")
-    ax.annotate(f"nearest neighbour + 2-opt: {nn2:,.0f}", (0, nn2), xytext=(4, 4),
+    ax.annotate(f"nearest neighbour + 2-opt: {nn2:,.0f}", (start, nn2), xytext=(4, -12),
                 textcoords="offset points", fontsize=8, color=MUTED)
-    ax.set_yscale("log")
     ax.set_xlabel("generation")
-    ax.set_ylabel("best tour cost (log scale)")
+    ax.set_ylabel("best tour length")
+    ax.set_ylim(bottom=0)
     n = len(res["seeds"])
-    ax.set_title(f"{res['map']}-node map: best cost per generation, mean +/- sd over {n} seeds\n"
-                 "cost = length + 100,000 per missing edge; early values are infeasible tours",
-                 loc="left")
+    ax.set_title(f"{res['map']}-node map: best tour length per generation, mean +/- sd over "
+                 f"{n} seeds\nshown from generation {start}, the first where every run has a "
+                 "tour with no missing edge", loc="left")
     ax.legend(loc="upper right", fontsize=8)
     fig.tight_layout()
     path = out / f"convergence_{res['map']}.png"

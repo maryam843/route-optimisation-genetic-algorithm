@@ -10,6 +10,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+MISSING = 100_000.0
+
 LABELS = {
     "nn": "Nearest neighbour",
     "nn+2opt": "Nearest neighbour + 2-opt",
@@ -77,14 +79,19 @@ def table_islands(res: dict) -> str:
 def table_anchor(res: dict) -> str:
     lines = [
         "| Method | Found the exact optimum | Hit rate per seed, mean +/- sd | "
-        "Mean gap on feasible instances |",
-        "|---|---:|---:|---:|",
+        "Tours using a missing edge | Mean gap to optimum, feasible tours only |",
+        "|---|---:|---:|---:|---:|",
     ]
+    runs = res["runs"]
     for key in ("nn", "nn+2opt", "ga"):
         s = res["summary"][key]
+        bad = sum(r[key] >= MISSING for r in runs)
+        gaps = [100.0 * (r[key] - r["optimum"]) / r["optimum"] for r in runs
+                if r[key] < MISSING and r["optimum_feasible"]]
+        gap = f"{sum(gaps) / len(gaps):.1f} %" if gaps else "n/a"
         lines.append(f"| {LABELS[key]} | {s['hits']} of {s['instances']} | "
                      f"{s['hit_rate_mean']:.0f} % +/- {s['hit_rate_sd']:.0f} % | "
-                     f"{s['mean_gap_pct_feasible']:.1f} % |")
+                     f"{bad} of {len(runs)} | {gap} |")
     return "\n".join(lines)
 
 
