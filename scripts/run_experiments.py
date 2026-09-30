@@ -2,6 +2,7 @@
 
 Usage:
     python scripts/run_experiments.py                # everything (about 40 min on 4 cores)
+    python scripts/run_experiments.py --machine-note "shared cloud VM"
     python scripts/run_experiments.py --only anchor  # one experiment
     python scripts/run_experiments.py --quick --out-dir /tmp/r   # tiny smoke run
 
@@ -44,7 +45,10 @@ from results_tables import write_tables  # noqa: E402
 
 SEEDS = [0, 1, 2, 3, 4]
 TUNING_SEEDS = [100, 101, 102]
-REPEATS = 3  # timing repeats per population; the median is kept
+REPEATS = 5  # timing repeats per population and seed
+REFERENCE_REPEATS = 5
+REFERENCE_TIME_LIMIT_S = 30
+MACHINE_NOTE: str | None = None
 MISSING_SHARE = 0.19  # share of missing edges in both course maps (192/992, 1900/9900)
 
 
@@ -60,9 +64,16 @@ def mean_sd(values: list[float]) -> tuple[float, float]:
     return float(statistics.mean(values)), float(statistics.stdev(values))
 
 
+def median_iqr(values: list[float]) -> dict:
+    """Median and interquartile range (25th and 75th percentiles)."""
+    q1, med, q3 = np.percentile(np.asarray(values, dtype=float), [25, 50, 75])
+    return {"median": float(med), "q1": float(q1), "q3": float(q3), "iqr": float(q3 - q1),
+            "n": len(values)}
+
+
 def save(out_dir: Path, name: str, payload: dict) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
-    payload = {"experiment": name, "environment": environment_info(), **payload}
+    payload = {"experiment": name, "environment": environment_info(MACHINE_NOTE), **payload}
     path = out_dir / f"{name}.json"
     path.write_text(json.dumps(payload, indent=1) + "\n", encoding="utf-8")
     print(f"saved {path}", flush=True)
@@ -158,7 +169,7 @@ def run_mpi(n_map: int, n_procs: int, seed: int, cfg: GAConfig, isl: IslandConfi
     return data
 
 
-def exp_map(out_dir: Path, n_map: int, quick: bool) -> None:
+def exp_map(out_dir: Path, n_map: int, quick: bool, name: str | None = None) -> None:
     d = load_map(n_map)
     cost = cost_matrix(d)
     gens = {32: 1000, 100: 2000}[n_map] if not quick else 40
@@ -213,37 +224,34 @@ def exp_map(out_dir: Path, n_map: int, quick: bool) -> None:
 
     order = ["nn", "nn+2opt", "ga", "ga+2opt", "ga-islands1", "ga-islands2", "ga-islands4",
              "ga-islands4+2opt"]
-    best_known = min(r["cost"] for r in runs)
     summary = {}
     for m in order:
         rs = [r for r in runs if r["method"] == m]
         lengths = [r["cost"] for r in rs]
         mu, sd = mean_sd(lengths)
-        tmu, tsd = mean_sd([r["time_s"] for r in rs])
         entry = {"mean": mu, "sd": sd, "min": min(lengths), "max": max(lengths),
                  "all_feasible": all(r["feasible"] for r in rs),
-                 "gap_pct_mean": 100.0 * (mu - best_known) / best_known,
-                 "time_mean": tmu, "time_sd": tsd}
+                 "time": median_iqr([r["time_s"] for r in rs])}
         if "generations_to_converge" in rs[0]:
             gmu, gsd = mean_sd([r["generations_to_converge"] for r in rs])
             entry.update(gens_to_converge_mean=gmu, gens_to_converge_sd=gsd)
         if "serial_time_s" in rs[0]:
-            smu, ssd = mean_sd([r["serial_time_s"] for r in rs])
-            entry.update(serial_time_mean=smu, serial_time_sd=ssd,
+            serial = median_iqr([r["serial_time_s"] for r in rs])
+            entry.update(serial_time=serial,
                          all_match_serial=all(r["matches_serial"] for r in rs),
-                         speedup_mean=smu / tmu)
+                         matches_serial_count=sum(r["matches_serial"] for r in rs),
+                         speedup_median=serial["median"] / entry["time"]["median"])
         if m.startswith("ga-islands") and "launch_wall_s" in rs[0]:
-            lmu, _ = mean_sd([r["launch_wall_s"] for r in rs])
-            entry["launch_wall_mean"] = lmu
+            entry["launch_wall"] = median_iqr([r["launch_wall_s"] for r in rs])
         summary[m] = entry
-    save(out_dir, f"map{n_map}", {
-        "map": n_map, "seeds": SEEDS, "ga_config": cfg.to_dict(),
+    best = min(runs, key=lambda r: r["cost"])
+    save(out_dir, name or f"map{n_map}", {
+        "map": n_map, "seeds": SEEDS, "quick": quick, "ga_config": cfg.to_dict(),
         "island_config": isl.to_dict(), "islands": list(islands),
         "island_population": "each island has population_size individuals",
-        "best_known_cost": best_known,
-        "best_known_method": min(runs, key=lambda r: r["cost"])["method"],
-        "best_known_tour": min(runs, key=lambda r: r["cost"])["tour"],
-        "summary": summary, "runs": runs})
+        "timing": "time per run; median and IQR over the 5 seeds (one run per seed)",
+        "best_cost": best["cost"], "best_method": best["method"], "best_seed": best["seed"],
+        "best_tour": best["tour"], "summary": summary, "runs": runs})
 
 
 # ---------------------------------------------------------------- fitness
@@ -276,26 +284,31 @@ def exp_fitness(out_dir: Path, quick: bool) -> None:
                         out = fn()
                         samples.append(time.perf_counter() - t0)
                         assert np.allclose(out, ref), name
-                    timings[name] = statistics.median(samples)
-                ga = GeneticAlgorithm(cost, GAConfig(population_size=size),
-                                      np.random.default_rng(seed))
-                t0 = time.perf_counter()
-                ga.step()
-                timings["ga_step_numpy"] = time.perf_counter() - t0
+                    timings[name] = samples
+                step_samples = []
+                for rep_i in range(REPEATS):
+                    ga = GeneticAlgorithm(cost, GAConfig(population_size=size),
+                                          np.random.default_rng([seed, rep_i]))
+                    t0 = time.perf_counter()
+                    ga.step()
+                    step_samples.append(time.perf_counter() - t0)
+                timings["ga_step_numpy"] = step_samples
                 rows.append({"population": size, "seed": seed, **timings})
                 print(f"fitness P={size} seed={seed}: "
-                      + " ".join(f"{k}={v * 1000:.1f}ms" for k, v in timings.items()), flush=True)
+                      + " ".join(f"{k}={statistics.median(v) * 1000:.1f}ms"
+                                 for k, v in timings.items()), flush=True)
     finally:
         for p in pools.values():
             p.close()
     summary = {}
     for size in sizes:
         rs = [r for r in rows if r["population"] == size]
-        summary[str(size)] = {k: dict(zip(("mean", "sd"), mean_sd([r[k] for r in rs]), strict=True))
+        summary[str(size)] = {k: median_iqr([x for r in rs for x in r[k]])
                               for k in rs[0] if k not in ("population", "seed")}
     save(out_dir, "parallel_fitness", {
         "map": 100, "workers": workers, "seeds": seeds, "start_method": "spawn",
-        "timing": f"median of {REPEATS} repeats per seed; pool start-up excluded",
+        "timing": f"median and IQR over {REPEATS} repeats x {len(seeds)} seeds; "
+                  "pool start-up excluded (pool warmed first)",
         "pool_startup_s_each": startup, "note": "all pool outputs checked equal to sequential",
         "summary": summary, "runs": rows})
 
@@ -323,7 +336,37 @@ def exp_legacy(out_dir: Path, quick: bool) -> None:
         "chosen_best": chosen, "shortest_in_population": shortest})
 
 
-EXPERIMENTS = ("legacy", "tuning", "anchor", "map32", "map100", "fitness")
+# ---------------------------------------------------------------- reference
+def exp_reference(out_dir: Path, quick: bool) -> None:
+    """OR-Tools guided local search: reference solver, not proven optimal."""
+    from route_ga.reference import solve_ortools
+
+    limit = 2 if quick else REFERENCE_TIME_LIMIT_S
+    repeats = 1 if quick else REFERENCE_REPEATS
+    out = {}
+    for n in (32, 100):
+        d = load_map(n)
+        rows = []
+        for r in range(repeats):
+            perm, info = solve_ortools(d, time_limit_s=limit)
+            s = summarise(perm, d)
+            rows.append({"repeat": r, "length": s["length"], "cost": s["cost"],
+                         "feasible": s["feasible"], "tour": s["tour"], **info})
+            print(f"reference map{n} repeat={r}: {s['length']:.0f} feasible={s['feasible']}",
+                  flush=True)
+        best = min(rows, key=lambda x: x["cost"])
+        out[str(n)] = {"runs": rows, "best_cost": best["cost"], "best_tour": best["tour"],
+                       "all_feasible": all(x["feasible"] for x in rows),
+                       "costs": [x["cost"] for x in rows]}
+    save(out_dir, "reference_ortools", {
+        "label": "reference solver, not proven optimal",
+        "solver": "OR-Tools routing, PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH",
+        "time_limit_s": limit, "repeats": repeats, "maps": out})
+
+
+EXPERIMENTS = ("phase0", "legacy", "tuning", "anchor", "map32", "map100", "map32_quick40",
+               "reference",
+               "fitness")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -331,11 +374,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--only", choices=EXPERIMENTS, action="append")
     ap.add_argument("--quick", action="store_true", help="tiny budgets, for smoke tests")
     ap.add_argument("--out-dir", type=Path, default=ROOT / "results")
+    ap.add_argument("--machine-note", help="stored in every result, e.g. 'shared cloud VM'")
     args = ap.parse_args(argv)
+    global MACHINE_NOTE
+    MACHINE_NOTE = args.machine_note
     todo = args.only or list(EXPERIMENTS)
     for name in todo:
         t0 = time.perf_counter()
-        if name == "legacy":
+        if name == "phase0":
+            from phase0_check import run as phase0_run
+
+            phase0_run(args.out_dir)
+        elif name == "legacy":
             exp_legacy(args.out_dir, args.quick)
         elif name == "tuning":
             exp_tuning(args.out_dir, args.quick)
@@ -345,6 +395,12 @@ def main(argv: list[str] | None = None) -> int:
             exp_map(args.out_dir, 32, args.quick)
         elif name == "map100":
             exp_map(args.out_dir, 100, args.quick)
+        elif name == "map32_quick40":
+            # Re-runs the 40-generation smoke configuration that found a 334 tour
+            # during development, so that number is backed by a results file.
+            exp_map(args.out_dir, 32, True, name="map32_quick40")
+        elif name == "reference":
+            exp_reference(args.out_dir, args.quick)
         else:
             exp_fitness(args.out_dir, args.quick)
         print(f"{name} done in {time.perf_counter() - t0:.1f}s", flush=True)

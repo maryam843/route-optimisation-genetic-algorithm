@@ -21,6 +21,7 @@ LABELS = {
     "ga-islands2": "GA, MPI islands x2",
     "ga-islands4": "GA, MPI islands x4",
     "ga-islands4+2opt": "GA, MPI islands x4 + 2-opt polish",
+    "ortools": "OR-Tools reference (not proven optimal)",
 }
 
 
@@ -41,11 +42,44 @@ def secs(x: float) -> str:
     return f"{x:.2f}"
 
 
-def table_map(res: dict) -> str:
+def med_iqr(t: dict, scale: float = 1.0, fmt=secs) -> str:
+    return f"{fmt(t['median'] * scale)} [{fmt(t['q1'] * scale)}-{fmt(t['q3'] * scale)}]"
+
+
+def best_found(results_dir: Path, n_map: int) -> tuple[float, str, str] | None:
+    """(cost, method, file) of the shortest tour in any results file for this map."""
+    cands = []
+    for name in (f"map{n_map}", f"map{n_map}_quick40"):
+        res = load(results_dir, name)
+        if res:
+            cands.append((res["best_cost"], res["best_method"], f"results/{name}.json"))
+    ref = load(results_dir, "reference_ortools")
+    if ref and str(n_map) in ref["maps"]:
+        cands.append((ref["maps"][str(n_map)]["best_cost"], "ortools",
+                      "results/reference_ortools.json"))
+    return min(cands) if cands else None
+
+
+def reference_cost(results_dir: Path, n_map: int) -> float | None:
+    ref = load(results_dir, "reference_ortools")
+    if ref and str(n_map) in ref["maps"]:
+        return ref["maps"][str(n_map)]["best_cost"]
+    return None
+
+
+def gap(x: float, base: float | None) -> str:
+    return "n/a" if base is None else f"{100.0 * (x - base) / base:.1f} %"
+
+
+def table_map(res: dict, results_dir: Path) -> str:
+    n = res["map"]
+    best = best_found(results_dir, n)
+    base = best[0] if best else None
+    refc = reference_cost(results_dir, n)
     lines = [
-        "| Method | Tour length, mean +/- sd | Best of 5 | Gap to best known | "
-        "Time (s), mean +/- sd | Generations to converge |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| Method | Tour length, mean +/- sd | Best of 5 | Gap to best found | "
+        "Gap to OR-Tools | Time (s), median [IQR] | Generations to converge |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     for key, s in res["summary"].items():
         gens = (ms(s["gens_to_converge_mean"], s["gens_to_converge_sd"], lambda v: f"{v:,.0f}")
@@ -53,26 +87,54 @@ def table_map(res: dict) -> str:
         feas = "" if s["all_feasible"] else " (not all feasible)"
         lines.append(
             f"| {LABELS[key]}{feas} | {ms(s['mean'], s['sd'])} | {s['min']:,.0f} | "
-            f"{s['gap_pct_mean']:.1f} % | {ms(s['time_mean'], s['time_sd'], secs)} | {gens} |")
+            f"{gap(s['mean'], base)} | {gap(s['mean'], refc)} | {med_iqr(s['time'])} | {gens} |")
+    ref = load(results_dir, "reference_ortools")
+    if ref and str(n) in ref["maps"]:
+        r = ref["maps"][str(n)]
+        costs = r["costs"]
+        mu = sum(costs) / len(costs)
+        sd = (sum((c - mu) ** 2 for c in costs) / (len(costs) - 1)) ** 0.5 if len(costs) > 1 else 0
+        lines.append(
+            f"| {LABELS['ortools']} | {ms(mu, sd)} ({len(costs)} repeats) | {min(costs):,.0f} | "
+            f"{gap(mu, base)} | {gap(mu, refc)} | {ref['time_limit_s']} (time limit) | n/a |")
+    return "\n".join(lines)
+
+
+def table_best(results_dir: Path) -> str:
+    lines = ["| Map | Shortest tour found in this study | Found by | Results file |",
+             "|---:|---:|---|---|"]
+    for n in (32, 100):
+        b = best_found(results_dir, n)
+        if b:
+            lines.append(f"| {n} nodes | {b[0]:,.0f} | {LABELS[b[1]]} | `{b[2]}` |")
+    return "\n".join(lines)
+
+
+def table_quick40(res: dict) -> str:
+    lines = ["| Method (40 generations, migration every 10) | Tour length, mean +/- sd | "
+             "Best of 5 |", "|---|---:|---:|"]
+    for key in ("ga+2opt", "ga-islands4+2opt"):
+        s = res["summary"][key]
+        lines.append(f"| {LABELS[key]} | {ms(s['mean'], s['sd'])} | {s['min']:,.0f} |")
     return "\n".join(lines)
 
 
 def table_islands(res: dict) -> str:
     lines = [
-        "| Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s) | "
-        "Same islands run serially (s) | Speed-up | Same result as serial? |",
+        "| Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | "
+        "Same islands one after another (s), median [IQR] | Speed-up | Same result? |",
         "|---:|---:|---:|---:|---:|---|",
     ]
     for k in res["islands"]:
         s = res["summary"][f"ga-islands{k}"]
-        if "serial_time_mean" in s:
-            serial = ms(s["serial_time_mean"], s["serial_time_sd"], secs)
-            speed = f"{s['speedup_mean']:.2f}x"
-            same = "yes, 5 of 5 seeds" if s["all_match_serial"] else "NO"
+        if "serial_time" in s:
+            serial = med_iqr(s["serial_time"])
+            speed = f"{s['speedup_median']:.2f} times faster"
+            same = f"yes, {s['matches_serial_count']} of 5 seeds"
         else:
-            serial, speed, same = "n/a", "1.00x (reference)", "n/a"
-        lines.append(f"| {k} | {ms(s['mean'], s['sd'])} | "
-                     f"{ms(s['time_mean'], s['time_sd'], secs)} | {serial} | {speed} | {same} |")
+            serial, speed, same = "n/a", "n/a (one island)", "n/a"
+        lines.append(f"| {k} | {ms(s['mean'], s['sd'])} | {med_iqr(s['time'])} | {serial} | "
+                     f"{speed} | {same} |")
     return "\n".join(lines)
 
 
@@ -88,22 +150,22 @@ def table_anchor(res: dict) -> str:
         bad = sum(r[key] >= MISSING for r in runs)
         gaps = [100.0 * (r[key] - r["optimum"]) / r["optimum"] for r in runs
                 if r[key] < MISSING and r["optimum_feasible"]]
-        gap = f"{sum(gaps) / len(gaps):.1f} %" if gaps else "n/a"
+        g = f"{sum(gaps) / len(gaps):.1f} %" if gaps else "n/a"
         lines.append(f"| {LABELS[key]} | {s['hits']} of {s['instances']} | "
                      f"{s['hit_rate_mean']:.0f} % +/- {s['hit_rate_sd']:.0f} % | "
-                     f"{bad} of {len(runs)} | {gap} |")
+                     f"{bad} of {len(runs)} | {g} |")
     return "\n".join(lines)
 
 
 def table_fitness(res: dict) -> str:
     lines = [
-        "| Population | Python loop, 1 process (ms) | Python loop, 4-process pool (ms) | "
-        "NumPy, 1 process (ms) | NumPy, 4-process pool (ms) | Whole GA generation (ms) |",
+        "| Population | Python loop, 1 process | Python loop, 4-process pool | "
+        "NumPy, 1 process | NumPy, 4-process pool | Whole GA generation |",
         "|---:|---:|---:|---:|---:|---:|",
     ]
 
     def cell(s, k):
-        return ms(s[k]["mean"] * 1000, s[k]["sd"] * 1000)
+        return med_iqr(s[k], 1000, f1)
 
     for size, s in res["summary"].items():
         lines.append(f"| {int(size):,} | {cell(s, 'python_seq')} | {cell(s, 'python_pool')} | "
@@ -122,12 +184,14 @@ def table_tuning(res: dict) -> str:
 
 
 def render_all(results_dir: Path) -> dict[str, str]:
+    results_dir = Path(results_dir)
     out = {}
     for name, fn, key in (
-        ("map32", table_map, "map32"),
-        ("map100", table_map, "map100"),
+        ("map32", lambda r: table_map(r, results_dir), "map32"),
+        ("map100", lambda r: table_map(r, results_dir), "map100"),
         ("islands32", table_islands, "map32"),
         ("islands100", table_islands, "map100"),
+        ("quick40", table_quick40, "map32_quick40"),
         ("anchor", table_anchor, "anchor_8node"),
         ("fitness", table_fitness, "parallel_fitness"),
         ("tuning", table_tuning, "tuning"),
@@ -135,6 +199,8 @@ def render_all(results_dir: Path) -> dict[str, str]:
         res = load(results_dir, key)
         if res is not None:
             out[name] = fn(res)
+    if best_found(results_dir, 32) or best_found(results_dir, 100):
+        out["bestfound"] = table_best(results_dir)
     return out
 
 

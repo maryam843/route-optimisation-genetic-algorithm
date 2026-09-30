@@ -20,7 +20,7 @@ from route_ga.data import MISSING_EDGE, load_map, missing_mask  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from results_tables import LABELS  # noqa: E402
+from results_tables import LABELS, best_found  # noqa: E402
 
 # Fixed categorical order (reference palette, light mode); colour follows the method.
 SERIES = {
@@ -131,10 +131,11 @@ def mds_layout(d: np.ndarray) -> np.ndarray:
     return vecs[:, idx] * np.sqrt(np.maximum(vals[idx], 0))
 
 
-def best_route(res: dict, out: Path) -> Path:
+def best_route(res: dict, out: Path, results_dir: Path) -> Path:
     d = load_map(res["map"])
     xy = mds_layout(d)
-    tour = res["best_known_tour"]
+    cost, method, source = best_found(results_dir, res["map"])
+    tour = _tour_from(results_dir, source, res["map"], method)
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.plot(xy[tour, 0], xy[tour, 1], color=BAR, lw=1.5, zorder=1)
     ax.scatter(xy[1:, 0], xy[1:, 1], s=36, color="#fcfcfb", edgecolor=INK, lw=1, zorder=2)
@@ -150,9 +151,9 @@ def best_route(res: dict, out: Path) -> Path:
     ax.grid(False)
     for s in ax.spines.values():
         s.set_visible(False)
-    label = LABELS[res["best_known_method"]]
+    label = LABELS[method]
     ax.set_title(f"{res['map']}-node map: shortest tour found in this study, length "
-                 f"{res['best_known_cost']:,.0f}\n({label}). Node positions come from MDS "
+                 f"{cost:,.0f}\n({label}). Node positions come from MDS "
                  "on road distances\nand are for display only; they are not real coordinates.",
                  loc="left", fontsize=9)
     fig.tight_layout()
@@ -162,6 +163,13 @@ def best_route(res: dict, out: Path) -> Path:
     return path
 
 
+def _tour_from(results_dir: Path, source: str, n_map: int, method: str) -> list[int]:
+    data = json.loads((results_dir / Path(source).name).read_text())
+    if method == "ortools":
+        return data["maps"][str(n_map)]["best_tour"]
+    return data["best_tour"]
+
+
 def island_scaling(results: list[dict], out: Path) -> Path:
     fig, (ax_t, ax_q) = plt.subplots(1, 2, figsize=(11, 4))
     colors = {32: "#2a78d6", 100: "#eb6834"}
@@ -169,8 +177,8 @@ def island_scaling(results: list[dict], out: Path) -> Path:
         ks = res["islands"]
         s = [res["summary"][f"ga-islands{k}"] for k in ks]
         c = colors.get(res["map"], BAR)
-        mpi = [x["time_mean"] for x in s]
-        serial = [x.get("serial_time_mean", x["time_mean"]) for x in s]
+        mpi = [x["time"]["median"] for x in s]
+        serial = [x.get("serial_time", x["time"])["median"] for x in s]
         ax_t.plot(ks, mpi, color=c, lw=2, marker="o", ms=6, label=f"{res['map']} nodes, MPI")
         ax_t.plot(ks, serial, color=c, lw=2, ls="--", marker="o", ms=6, mfc="#fcfcfb",
                   label=f"{res['map']} nodes, same islands in one process")
@@ -180,7 +188,7 @@ def island_scaling(results: list[dict], out: Path) -> Path:
     ax_q.set_xticks([1, 2, 4])
     ax_t.set_xlabel("islands (one MPI process each, one machine)")
     ax_q.set_xlabel("islands (one MPI process each, one machine)")
-    ax_t.set_ylabel("wall time (s), mean of 5 seeds")
+    ax_t.set_ylabel("wall time (s), median of 5 seeds")
     ax_q.set_ylabel("tour length, mean +/- sd")
     ax_t.set_title("Time: each island has the full population", loc="left")
     ax_q.set_title("Quality (shorter is better)", loc="left")
@@ -206,7 +214,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     made = [convergence(r, args.out) for r in maps]
     made += [methods(maps, args.out), island_scaling(maps, args.out)]
-    made += [best_route(r, args.out) for r in maps]
+    made += [best_route(r, args.out, args.results) for r in maps]
     for p in made:
         print(f"saved {p}")
     return 0
