@@ -1,0 +1,434 @@
+{
+ "experiment": "phase0_2025",
+ "environment": {
+  "timestamp_utc": "2026-09-30T17:40:45+00:00",
+  "python": "3.12.3",
+  "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+  "nproc": 4,
+  "ram_bytes": 16876515328,
+  "machine_note": null,
+  "packages": {
+   "numpy": "2.5.3",
+   "matplotlib": "3.11.2",
+   "mpi4py": "4.1.2",
+   "ortools": "9.15.6755",
+   "route-ga": "1.0.0"
+  },
+  "code": {
+   "src_commit": "b29eee97df1bc4faf2155a9ea9f467c0c20fa8fa",
+   "src_dirty": false,
+   "head_commit": "48c23c53f7dd744b8da3e319ca62d3c66e807eb8",
+   "scripts_dirty": false
+  }
+ },
+ "matrices": {
+  "32": {
+   "shape": [
+    32,
+    32
+   ],
+   "cells_equal_100000": 192,
+   "cells_equal_10000": 0,
+   "symmetric": true
+  },
+  "100": {
+   "shape": [
+    100,
+    100
+   ],
+   "cells_equal_100000": 1900,
+   "cells_equal_10000": 0,
+   "symmetric": true
+  }
+ },
+ "trial_as_is": {
+  "returncode": 1,
+  "error": "_pickle.PicklingError: Can't pickle <function <lambda> at 0x7f67df6f5080>: attribute lookup <lambda> on __main__ failed"
+ },
+ "trial_without_lambdas": {
+  "population_size": 300,
+  "generations": 60,
+  "seed": 42,
+  "returncode": 0,
+  "chosen_best_first": 1300840.0,
+  "chosen_best_last": 1400983.0,
+  "shortest_first": 101498.0,
+  "shortest_last": 201175.0,
+  "final_total_distance_printed": -1400983.0,
+  "generations_all_routes_use_missing_edge": 56,
+  "min_routes_with_missing_edge": 299,
+  "restarts_printed": 11,
+  "per_generation": [
+   {
+    "generation": 0,
+    "shortest": 101498.0,
+    "chosen_best": 1300840.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 1,
+    "shortest": 101600.0,
+    "chosen_best": 1300840.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 2,
+    "shortest": 201360.0,
+    "chosen_best": 1300840.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 3,
+    "shortest": 201406.0,
+    "chosen_best": 1300840.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 4,
+    "shortest": 201463.0,
+    "chosen_best": 1300840.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 5,
+    "shortest": 201528.0,
+    "chosen_best": 1300840.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 6,
+    "shortest": 101601.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 7,
+    "shortest": 101396.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 8,
+    "shortest": 101769.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 9,
+    "shortest": 1775.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 299
+   },
+   {
+    "generation": 10,
+    "shortest": 201354.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 11,
+    "shortest": 201497.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 12,
+    "shortest": 101237.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 13,
+    "shortest": 101452.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 14,
+    "shortest": 101556.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 15,
+    "shortest": 201276.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 16,
+    "shortest": 201389.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 17,
+    "shortest": 101248.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 18,
+    "shortest": 101431.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 19,
+    "shortest": 201415.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 20,
+    "shortest": 201445.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 21,
+    "shortest": 201301.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 22,
+    "shortest": 101393.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 23,
+    "shortest": 101785.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 24,
+    "shortest": 201388.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 25,
+    "shortest": 201412.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 26,
+    "shortest": 201621.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 27,
+    "shortest": 1350.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 299
+   },
+   {
+    "generation": 28,
+    "shortest": 101526.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 29,
+    "shortest": 1688.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 299
+   },
+   {
+    "generation": 30,
+    "shortest": 201433.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 31,
+    "shortest": 201461.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 32,
+    "shortest": 101489.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 33,
+    "shortest": 201261.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 34,
+    "shortest": 201357.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 35,
+    "shortest": 201472.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 36,
+    "shortest": 201504.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 37,
+    "shortest": 1677.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 299
+   },
+   {
+    "generation": 38,
+    "shortest": 101605.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 39,
+    "shortest": 201159.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 40,
+    "shortest": 201425.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 41,
+    "shortest": 201472.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 42,
+    "shortest": 101430.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 43,
+    "shortest": 201372.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 44,
+    "shortest": 101682.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 45,
+    "shortest": 201536.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 46,
+    "shortest": 201541.0,
+    "chosen_best": 1400917.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 47,
+    "shortest": 101327.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 48,
+    "shortest": 101492.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 49,
+    "shortest": 101779.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 50,
+    "shortest": 201259.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 51,
+    "shortest": 201399.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 52,
+    "shortest": 201436.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 53,
+    "shortest": 101319.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 54,
+    "shortest": 101488.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 55,
+    "shortest": 201239.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 56,
+    "shortest": 201336.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 57,
+    "shortest": 201394.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 58,
+    "shortest": 101487.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   },
+   {
+    "generation": 59,
+    "shortest": 201175.0,
+    "chosen_best": 1400983.0,
+    "routes_with_missing_edge": 300
+   }
+  ]
+ },
+ "original_tests": {
+  "returncode": 0,
+  "passed": 5
+ },
+ "calculate_fitness_route_0_5_1": -100090.0,
+ "edge_0_5": 100000.0,
+ "calculate_fitness_route_0_1": -32.0,
+ "two_times_edge_0_1": 64.0
+}
