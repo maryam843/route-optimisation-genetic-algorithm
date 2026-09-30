@@ -1,0 +1,59 @@
+{
+ "experiment": "quality",
+ "environment": {
+  "timestamp_utc": "2026-09-30T18:13:42+00:00",
+  "python": "3.12.3",
+  "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+  "nproc": 4,
+  "ram_bytes": 16876515328,
+  "machine_note": null,
+  "packages": {
+   "numpy": "2.5.3",
+   "matplotlib": "3.11.2",
+   "mpi4py": "4.1.2",
+   "ortools": "9.15.6755",
+   "route-ga": "1.0.0"
+  },
+  "code": {
+   "src_commit": "b29eee97df1bc4faf2155a9ea9f467c0c20fa8fa",
+   "src_dirty": false,
+   "head_commit": "51354b21d1a04b186aedfd5639ec6e68704a9d97",
+   "scripts_dirty": false
+  }
+ },
+ "tests": {
+  "returncode": 0,
+  "collected": 96,
+  "passed": 89,
+  "failed": 0,
+  "xfailed": 7,
+  "skipped": 0,
+  "skip_reasons": [],
+  "coverage_pct": 93.3
+ },
+ "tests_without_mpi": {
+  "returncode": 0,
+  "collected": 96,
+  "passed": 86,
+  "failed": 0,
+  "xfailed": 7,
+  "skipped": 3,
+  "skip_reasons": [
+   "MPI switched off by ROUTE_GA_NO_MPI (coverage run without MPI)"
+  ],
+  "coverage_pct": 87.9
+ },
+ "code": {
+  "python_lines": {
+   "src": 1041,
+   "tests": 1078,
+   "scripts": 1541
+  },
+  "tracked_files": 65,
+  "tracked_bytes": 1717092,
+  "largest_file": "results/map100.json",
+  "largest_file_bytes": 524618
+ }
+}
