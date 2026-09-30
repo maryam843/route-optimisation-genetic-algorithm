@@ -1,4 +1,5 @@
 import multiprocessing as mp
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -16,6 +17,8 @@ def pytest_configure(config):
 
 
 def mpi_available() -> tuple[bool, str]:
+    if os.environ.get("ROUTE_GA_NO_MPI"):
+        return False, "MPI switched off by ROUTE_GA_NO_MPI (coverage run without MPI)"
     if sys.platform == "win32":
         return False, "MPI tests run on Linux only (no MS-MPI on the Windows runner)"
     if shutil.which("mpiexec") is None:
