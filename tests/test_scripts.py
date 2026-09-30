@@ -22,7 +22,7 @@ MPI_OK, MPI_REASON = mpi_available()
 @pytest.fixture(scope="module")
 def quick_results(tmp_path_factory):
     out = tmp_path_factory.mktemp("results")
-    only = ["legacy", "tuning", "anchor", "fitness"]
+    only = ["legacy", "tuning", "anchor", "fitness", "reference"]
     if MPI_OK:
         only.append("map32")
     args = ["--quick", "--out-dir", str(out)]
@@ -36,7 +36,9 @@ def test_quick_results_have_provenance(quick_results):
     for p in quick_results.glob("*.json"):
         data = json.loads(p.read_text())
         env = data["environment"]
-        assert env["timestamp_utc"] and env["python"] and env["cpu_count"]
+        assert env["timestamp_utc"] and env["python"] and env["nproc"] and env["os"]
+        assert "cpu_model" in env and "ram_bytes" in env
+        assert env["code"]["src_commit"] is None or len(env["code"]["src_commit"]) == 40
     assert (quick_results / "tables.md").exists()
 
 
@@ -64,6 +66,15 @@ def test_figures_without_results(tmp_path):
 def test_generations_to_converge():
     assert run_experiments.generations_to_converge([9, 7, 7, 5, 5]) == 3
     assert run_experiments.mean_sd([4.0]) == (4.0, 0.0)
+    m = run_experiments.median_iqr([1, 2, 3, 4, 5])
+    assert m["median"] == 3 and m["q1"] == 2 and m["q3"] == 4 and m["n"] == 5
+
+
+def test_quick_reference(quick_results):
+    data = json.loads((quick_results / "reference_ortools.json").read_text())
+    assert data["label"] == "reference solver, not proven optimal"
+    for n in ("32", "100"):
+        assert data["maps"][n]["all_feasible"]
 
 
 def test_repository_readme_matches_results():
