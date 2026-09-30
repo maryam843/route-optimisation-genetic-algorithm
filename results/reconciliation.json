@@ -1,7 +1,7 @@
 {
  "experiment": "reconciliation",
  "environment": {
-  "timestamp_utc": "2026-09-30T18:29:31+00:00",
+  "timestamp_utc": "2026-09-30T18:33:31+00:00",
   "python": "3.12.3",
   "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
   "machine": "x86_64",
@@ -19,7 +19,7 @@
   "code": {
    "src_commit": "b29eee97df1bc4faf2155a9ea9f467c0c20fa8fa",
    "src_dirty": false,
-   "head_commit": "d804cf73d9fff1522fc262dbc46b0078e17b62fd",
+   "head_commit": "61e026a957ab51a9bf41b41cf5b45a70c4411325",
    "scripts_dirty": true
   }
  },
@@ -112,16 +112,20 @@
   {
    "seen_in": "first OR-Tools trial (5-second limit)",
    "command": "solve_ortools(map 100, time_limit_s=5)",
-   "length": 382.0,
+   "length": 394.0,
    "feasible": true
   }
  ],
  "observed_not_reproduced": [
   {
-   "seen_in": "first OR-Tools trial (5-second limit)",
+   "seen_in": "OR-Tools with a 5-second limit, earlier runs",
    "map": 100,
-   "length": 382.0,
-   "note": "the re-run below gave a different length; both are longer than the 30-second OR-Tools tours in reference_ortools.json"
+   "length": 382.0
+  },
+  {
+   "seen_in": "OR-Tools with a 5-second limit, earlier runs",
+   "map": 100,
+   "length": 393.0
   }
  ]
 }

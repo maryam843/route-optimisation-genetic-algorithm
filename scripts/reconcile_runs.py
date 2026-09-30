@@ -42,12 +42,13 @@ CLI_RUNS = [
     ("README command check", "--map 32 --method ga-islands --islands 4 --seed 0"),
     ("CI smoke step", "--map 32 --method ga --seed 0 --generations 50"),
 ]
-# Seen once during development but not saved at the time, and not reproduced
-# exactly: OR-Tools with a time limit is not deterministic between runs.
+# OR-Tools with a 5-second limit is not deterministic between runs: on the
+# 100-node map it gave these lengths in different runs during this session.
+# The run in "runs" below is one more sample. All are longer than the
+# 30-second OR-Tools tours in reference_ortools.json.
 OBSERVED_NOT_REPRODUCED = [
-    {"seen_in": "first OR-Tools trial (5-second limit)", "map": 100, "length": 382.0,
-     "note": "the re-run below gave a different length; both are longer than the "
-             "30-second OR-Tools tours in reference_ortools.json"},
+    {"seen_in": "OR-Tools with a 5-second limit, earlier runs", "map": 100, "length": 382.0},
+    {"seen_in": "OR-Tools with a 5-second limit, earlier runs", "map": 100, "length": 393.0},
 ]
 
 MPI_RUNS = [
