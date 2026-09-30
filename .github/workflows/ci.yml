@@ -13,8 +13,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # results provenance check needs the history of src/
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install Open MPI (Linux only)
@@ -31,20 +33,35 @@ jobs:
       - name: Lint
         run: ruff check .
       - name: Tests with coverage (MPI tests skip on Windows with a reason)
-        run: pytest -rsx --cov=route_ga --cov-report=term-missing --cov-fail-under=85
+        run: pytest -rsx --cov=route_ga --cov-report=term-missing --cov-fail-under=85 --junitxml=junit.xml
+      - name: Test summary gate (legacy cases xfailed, no skips except MPI on Windows)
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            python scripts/check_test_summary.py junit.xml --allow-mpi-skips
+          else
+            python scripts/check_test_summary.py junit.xml
+          fi
+      - name: Coverage without MPI (Linux only)
+        if: runner.os == 'Linux'
+        env:
+          ROUTE_GA_NO_MPI: "1"
+        run: pytest -q --cov=route_ga --cov-fail-under=85
       - name: README commands (smoke)
         run: |
           python -m route_ga --help
-          python -m route_ga --map 32 --method 2opt
+          python -m route_ga --map 32 --method nn
+          python -m route_ga --map 100 --method 2opt
+          python -m route_ga --map 32 --method ga --seed 0 --generations 50
           python scripts/check_readme_claims.py
 
   pii-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Scan full git history for personal data and secrets
