@@ -119,6 +119,36 @@ def table_quick40(res: dict) -> str:
     return "\n".join(lines)
 
 
+def fitness_evaluations(population: int, generations: int, islands: int, restarts: int) -> int:
+    """Routes scored in one run: each island scores its full population once at
+    the start, once per generation and once per restart (tests/test_scripts.py
+    checks this against a counting evaluator). 2-opt polish is not included."""
+    return population * (islands * (1 + generations) + restarts)
+
+
+def evaluations(res: dict, method: str) -> list[int]:
+    cfg = res["ga_config"]
+    k = 1 if method == "ga" else int(method.removeprefix("ga-islands"))
+    return [fitness_evaluations(cfg["population_size"], cfg["generations"], k, r["restarts"])
+            for r in res["runs"] if r["method"] == method]
+
+
+def table_evaluations(results_dir: Path) -> str:
+    lines = ["| Map | Method | Fitness evaluations per run, mean | Times the single GA | "
+             "Tour length, mean |", "|---:|---|---:|---:|---:|"]
+    for n in (32, 100):
+        res = load(results_dir, f"map{n}")
+        if not res:
+            continue
+        base = sum(evaluations(res, "ga")) / len(evaluations(res, "ga"))
+        for m in ("ga", "ga-islands1", "ga-islands2", "ga-islands4"):
+            ev = evaluations(res, m)
+            mean = sum(ev) / len(ev)
+            lines.append(f"| {n} | {LABELS[m]} | {mean:,.0f} | {mean / base:.2f} | "
+                         f"{res['summary'][m]['mean']:,.1f} |")
+    return "\n".join(lines)
+
+
 def table_islands(res: dict) -> str:
     lines = [
         "| Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | "
@@ -199,6 +229,8 @@ def render_all(results_dir: Path) -> dict[str, str]:
         res = load(results_dir, key)
         if res is not None:
             out[name] = fn(res)
+    if load(results_dir, "map32") or load(results_dir, "map100"):
+        out["evaluations"] = table_evaluations(results_dir)
     if best_found(results_dir, 32) or best_found(results_dir, 100):
         out["bestfound"] = table_best(results_dir)
     return out

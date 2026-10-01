@@ -84,6 +84,19 @@
 | 5 | 0.9 | 562.0 +/- 30.5 |
 <!-- END:tuning -->
 
+<!-- BEGIN:evaluations -->
+| Map | Method | Fitness evaluations per run, mean | Times the single GA | Tour length, mean |
+|---:|---|---:|---:|---:|
+| 32 | GA, single population | 201,000 | 1.00 | 519.6 |
+| 32 | GA, MPI islands x1 | 200,920 | 1.00 | 519.2 |
+| 32 | GA, MPI islands x2 | 402,320 | 2.00 | 454.8 |
+| 32 | GA, MPI islands x4 | 803,880 | 4.00 | 424.2 |
+| 100 | GA, single population | 401,400 | 1.00 | 1,061.2 |
+| 100 | GA, MPI islands x1 | 401,440 | 1.00 | 1,070.0 |
+| 100 | GA, MPI islands x2 | 802,960 | 2.00 | 1,005.6 |
+| 100 | GA, MPI islands x4 | 1,603,960 | 4.00 | 967.6 |
+<!-- END:evaluations -->
+
 <!-- BEGIN:bestfound -->
 | Map | Shortest tour found in this study | Found by | Results file |
 |---:|---:|---|---|

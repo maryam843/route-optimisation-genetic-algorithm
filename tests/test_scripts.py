@@ -135,3 +135,31 @@ def test_pii_scan_on_new_repo(tmp_path):
 
 def test_tables_script_entry(tmp_path):
     assert results_tables.write_tables(Path(tmp_path)).exists()
+
+
+def test_fitness_evaluation_formula_matches_a_counting_evaluator():
+    """The README's evaluation counts come from this formula; check it on real runs."""
+    import numpy as np
+
+    from route_ga.data import load_map
+    from route_ga.ga import GAConfig, GeneticAlgorithm, VectorEvaluator
+    from route_ga.route import cost_matrix
+
+    class Counting(VectorEvaluator):
+        def __init__(self, cost):
+            super().__init__(cost)
+            self.rows = 0
+
+        def __call__(self, population):
+            self.rows += len(population)
+            return super().__call__(population)
+
+    cost = cost_matrix(load_map(32))
+    cfg = GAConfig(population_size=20, generations=40, stagnation_limit=3)
+    ev = Counting(cost)
+    ga = GeneticAlgorithm(cost, cfg, np.random.default_rng(0), ev)
+    for _ in range(cfg.generations):
+        ga.step()
+    assert ga.restarts > 0
+    assert ev.rows == results_tables.fitness_evaluations(20, 40, 1, ga.restarts)
+    assert results_tables.fitness_evaluations(200, 1000, 4, 16) == 200 * (4 * 1001 + 16)
