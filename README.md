@@ -38,7 +38,7 @@ Both are symmetric, real distances are whole numbers from 1 to 99, and about 19 
 | `calculate_fitness` and `select_in_tournament` | 2025 | Me (following the brief) |
 | Process pool for crossover and mutation (crashed) | 2025 | Me |
 | Five small tests | 2025 | Me |
-| Every bug fix, the `route_ga` package, baselines, OR-Tools reference, island model with MPI, parallel fitness benchmark, CLI, 96 test cases, experiments, figures, CI | 2026 | Me |
+| Every bug fix, the `route_ga` package, baselines, OR-Tools reference, island model with MPI, parallel fitness benchmark, CLI, 97 test cases, experiments, figures, CI | 2026 | Me |
 
 About 25-30 % of the 2025 code was mine; the rest was the course skeleton. The 2025 files are kept unchanged (apart from a header saying who wrote them) in `original_2025/`.
 
