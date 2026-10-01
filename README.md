@@ -154,6 +154,23 @@ Each island keeps the full population of 200, so 4 islands do 4 times the work. 
 
 On the 100-node map the 4 islands ran 3.38 times faster with 4 MPI processes on one 4-core machine, compared with the same 4 islands run one after another (3.41 times faster on the 32-node map). The small rise in MPI time from 1 to 4 islands is migration plus 4 processes sharing the machine.
 
+Each island has a full population, so N islands score about N times as many routes as one population (counted from the saved runs; 2-opt polish not included):
+
+<!-- BEGIN:evaluations -->
+| Map | Method | Fitness evaluations per run, mean | Times the single GA | Tour length, mean |
+|---:|---|---:|---:|---:|
+| 32 | GA, single population | 201,000 | 1.00 | 519.6 |
+| 32 | GA, MPI islands x1 | 200,920 | 1.00 | 519.2 |
+| 32 | GA, MPI islands x2 | 402,320 | 2.00 | 454.8 |
+| 32 | GA, MPI islands x4 | 803,880 | 4.00 | 424.2 |
+| 100 | GA, single population | 401,400 | 1.00 | 1,061.2 |
+| 100 | GA, MPI islands x1 | 401,440 | 1.00 | 1,070.0 |
+| 100 | GA, MPI islands x2 | 802,960 | 2.00 | 1,005.6 |
+| 100 | GA, MPI islands x4 | 1,603,960 | 4.00 | 967.6 |
+<!-- END:evaluations -->
+
+So the better tours with more islands come mostly from more total work, not from parallelism itself; what MPI adds is doing that extra work in about the same wall time.
+
 ### Parallel fitness evaluation: when is a process pool worth it?
 
 Time to score one population on the 100-node map: median [IQR] over 5 repeats for each of 5 seeds, with the pool started beforehand (`spawn` method, 4 workers). Pool results were checked equal to the sequential ones.
@@ -187,7 +204,7 @@ During development a quick 40-generation smoke run (migration every 10 generatio
 | GA, MPI islands x4 + 2-opt polish | 373.8 +/- 31.1 | 334 |
 <!-- END:quick40 -->
 
-A less converged population gives 2-opt more varied starting tours, which can help the polish. It is still well behind OR-Tools (308).
+2-opt polish does most of the work and the GA's swap mutation adds little: going from 40 to 1,000 generations moved the single GA's own average a long way (805.6 to 519.6), but its 2-opt-polished average only from 417.8 to 397.6 (`results/map32_quick40.json`, `results/map32.json`). A less converged population also gives 2-opt more varied starting tours, which is how the 40-generation run found 334. It is still well behind OR-Tools (308).
 
 ### Parameter tuning
 
@@ -212,7 +229,7 @@ Tournament size and mutation rate were checked on the 32-node map with 3 extra s
 
 ## What went wrong in 2025 and how I fixed it
 
-I confirmed each bug by running the 2025 code (`scripts/phase0_check.py`, saved in `results/phase0_2025.json`). Each one has a regression test in `tests/test_regressions_2025.py` that runs the real 2025 code and must fail with the specific exception for that bug (shown as XFAIL), and runs the new code, which must pass.
+I confirmed each bug by running the 2025 code (`scripts/phase0_check.py`, saved in `results/phase0_2025.json`). The first six bugs below are each pinned by a regression test in `tests/test_regressions_2025.py` (7 test cases; the direction bug has two) that runs the real 2025 code and must fail with the specific exception for that bug (shown as XFAIL), and runs the new code, which must pass. The missing `__main__` guard is caught by the process-pool case on Windows and macOS, where the 2025 script breaks before it reaches the lambdas.
 
 | 2025 bug | What happened | Fix |
 |---|---|---|
@@ -235,6 +252,7 @@ I confirmed each bug by running the 2025 code (`scripts/phase0_check.py`, saved 
 - The GA settings were checked on the same 32-node map that the results use (with different seeds), so the 32-node GA numbers may be slightly optimistic. The 100-node map was not used for tuning.
 - Timings come from a shared cloud VM and can change from run to run; the medians and IQRs show the spread I saw.
 - My GA uses the course operators (order crossover, swap mutation) and loses to 2-opt and OR-Tools; I did not try stronger operators.
+- The island comparison is not equal work: each island has a full population, so N islands do about N times the fitness evaluations of one. Better tours with more islands come mostly from that extra work, not from parallelism itself.
 
 ## What I learned
 
