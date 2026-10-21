@@ -81,7 +81,13 @@ def solve(args: argparse.Namespace, distances: np.ndarray) -> dict:
             backend = "mpi" if mpi_world_size_from_env() > 1 else "serial"
         isl_cfg = IslandConfig(args.islands, args.migration_interval, args.migrants)
         if backend == "mpi":
+            from mpi4py import MPI
+
             res = run_islands_mpi(cost, ga_cfg, isl_cfg, args.seed)
+            rank = MPI.COMM_WORLD.Get_rank()
+            if rank != 0:
+                # Every rank gets the combined result; only rank 0 polishes and reports it.
+                return {"mpi_rank": rank}
         else:
             res = run_islands_serial(cost, ga_cfg, isl_cfg, args.seed)
         perm = res.best_perm
@@ -110,12 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     distances = load_matrix(args.matrix) if args.matrix else load_map(args.map)
     result = solve(args, distances)
-    is_root = True
-    if args.method == "ga-islands" and result.get("backend", "").startswith("mpi"):
-        from mpi4py import MPI
-
-        is_root = MPI.COMM_WORLD.Get_rank() == 0
-    if not is_root:
+    if result.get("mpi_rank", 0) != 0:
         return 0
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)

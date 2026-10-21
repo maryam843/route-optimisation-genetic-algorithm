@@ -119,3 +119,17 @@ def test_mpiexec_two_islands_valid_reproducible_and_equal_to_serial(tmp_path):
     assert a["tour"] == b["tour"] and a["cost"] == b["cost"]
     ser = run_islands_serial(cost_matrix(d), SMALL_CFG, IslandConfig(2, 5, 2), seed=3)
     assert to_tour(ser.best_perm) == a["tour"]
+
+
+@needs_mpi
+@pytest.mark.slow
+def test_mpiexec_only_rank_zero_polishes_and_prints(tmp_path):
+    csv = tmp_path / "small.csv"
+    write_csv(csv, small_matrix())
+    cmd = mpiexec_command(
+        2, sys.executable, "-m", "route_ga", "--matrix", str(csv), "--method", "ga-islands",
+        "--seed", "3", "--generations", "30", "--population", "20", "--polish")
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300, env=clean_mpi_env())
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout.count("tour length=") == 1
+    assert "method=ga-islands+2opt" in proc.stdout
