@@ -48,6 +48,10 @@ TUNING_SEEDS = [100, 101, 102]
 REPEATS = 5  # timing repeats per population and seed
 REFERENCE_REPEATS = 5
 REFERENCE_TIME_LIMIT_S = 30
+# Single-GA run used as a CPU speed check next to the time-limited OR-Tools
+# result: map 32, seed 0, 1,000 generations. It took 9.2 s on the VM of the
+# 2026-10-17 re-run, where OR-Tools found 338 on the 100-node map.
+SPEED_CHECK_EARLIER_S = 9.2
 MACHINE_NOTE: str | None = None
 MISSING_SHARE = 0.19  # share of missing edges in both course maps (192/992, 1900/9900)
 
@@ -335,10 +339,21 @@ def exp_reference(out_dir: Path, quick: bool) -> None:
         out[str(n)] = {"runs": rows, "best_cost": best["cost"], "best_tour": best["tour"],
                        "all_feasible": all(x["feasible"] for x in rows),
                        "costs": [x["cost"] for x in rows]}
+    speed_cfg = replace(GAConfig(), generations=50 if quick else 1000)
+    speed = run_ga(cost_matrix(load_map(32)), speed_cfg, 0).elapsed_s
     save(out_dir, "reference_ortools", {
         "label": "reference solver, not proven optimal",
         "solver": "OR-Tools routing, PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH",
-        "time_limit_s": limit, "repeats": repeats, "maps": out})
+        "time_limit_s": limit, "repeats": repeats,
+        "note": f"the search stops at a {limit} s time limit, so the tour found can depend "
+                "on machine speed: a slower machine searches less in the same time",
+        "speed_check": {
+            "what": f"single GA run, map 32, seed 0, {speed_cfg.generations} generations",
+            "this_machine_s": speed,
+            "earlier_vm_s": None if quick else SPEED_CHECK_EARLIER_S,
+            "earlier_vm": None if quick else "2026-10-17 re-run, same code and settings; "
+                                              "OR-Tools found 338 on the 100-node map there"},
+        "maps": out})
 
 
 EXPERIMENTS = ("tuning", "anchor", "map32", "map100", "map32_quick40", "reference", "fitness")
