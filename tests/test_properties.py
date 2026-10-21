@@ -1,4 +1,4 @@
-"""T3: property-based tests with hypothesis."""
+"""Property-based tests with hypothesis."""
 
 import numpy as np
 from hypothesis import given, settings

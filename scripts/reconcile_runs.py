@@ -1,4 +1,4 @@
-"""V5 number reconciliation: re-run every ad-hoc configuration whose tour length
+"""Number reconciliation: re-run every ad-hoc configuration whose tour length
 was seen during development (smoke runs, README command checks, CI smoke step),
 so each of those numbers is backed by results/reconciliation.json.
 
@@ -43,7 +43,7 @@ CLI_RUNS = [
     ("CI smoke step", "--map 32 --method ga --seed 0 --generations 50"),
 ]
 # OR-Tools with a 5-second limit is not deterministic between runs: on the
-# 100-node map it gave these lengths in different runs during this session.
+# 100-node map it gave these lengths in different runs during development.
 # The run in "runs" below is one more sample. All are longer than the
 # 30-second OR-Tools tours in reference_ortools.json.
 OBSERVED_NOT_REPRODUCED = [

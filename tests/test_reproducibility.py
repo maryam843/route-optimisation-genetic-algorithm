@@ -1,4 +1,4 @@
-"""T8: the same seed gives the same best route and length."""
+"""The same seed gives the same best route and length."""
 
 from route_ga.cli import main
 from route_ga.data import load_map

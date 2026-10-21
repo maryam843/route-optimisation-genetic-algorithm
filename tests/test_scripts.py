@@ -78,7 +78,7 @@ def test_quick_reference(quick_results):
 
 
 def test_repository_readme_matches_results():
-    """T11: the committed README against the committed results."""
+    """The committed README against the committed results."""
     errors = check_readme_claims.check(ROOT / "README.md", ROOT / "results")
     assert errors == []
 
@@ -110,7 +110,7 @@ def test_claims_checker_catches_problems(tmp_path):
 
 
 def test_pii_scan_clean():
-    """T12: no personal data or secrets anywhere in the git history."""
+    """No personal data or secrets anywhere in the git history."""
     if not (ROOT / ".git").exists():
         pytest.skip("not a git checkout")
     hits, n_commits, _ = pii_scan.scan(ROOT)

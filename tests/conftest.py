@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def pytest_configure(config):
-    # T7: force the Windows/macOS start method everywhere, so a pickling or
+    # Force the Windows/macOS start method everywhere, so a pickling or
     # bootstrapping bug shows up on Linux too.
     mp.set_start_method("spawn", force=True)
 

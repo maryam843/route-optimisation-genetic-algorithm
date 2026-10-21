@@ -8,7 +8,7 @@ Checks:
 3. Every number in the README text (and in --report / --skills files) is found
    in results/*.json, in the rendered tables, in the data files, or in the short
    ``CITED`` list below (each with its source). Exempt: code spans and code
-   blocks, URLs, hashes, dates, versions, identifiers like T12 or A1-P2,
+   blocks, URLs, hashes, dates, versions, identifiers like A1-P2,
    file:line references, "N/10" rubric scores, whole numbers 0 to 10, and the
    years 2025 and 2026.
 4. Every results/*.json was produced from the last commit that changed src/,
@@ -20,7 +20,7 @@ Checks:
 
 Usage:
     python scripts/check_readme_claims.py
-    python scripts/check_readme_claims.py --report ../Audit_out/REPORT.md --skills skills.json
+    python scripts/check_readme_claims.py --report notes.md --skills skills.json
 """
 
 from __future__ import annotations
@@ -51,8 +51,8 @@ EMOJI = re.compile("[\U0001f300-\U0001faff☀-➿]")
 
 # Numbers that do not come from results/, each with its source.
 CITED = {
-    "25": "share of the 2025 code that was mine (lower bound), audit DSAI3202__A1-P2_AUDIT.md",
-    "30": "share of the 2025 code that was mine (upper bound), same audit",
+    "25": "share of the 2025 code that was mine (lower bound), from my review of the 2025 files",
+    "30": "share of the 2025 code that was mine (upper bound), same review",
     # 2025 loop with the process pool removed (population 300, 60 generations,
     # seed 42), measured before the 2025 code was taken out of the repo.
     "1,300,840": "2025 route called 'best', generation 0",

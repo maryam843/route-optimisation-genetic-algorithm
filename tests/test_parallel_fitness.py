@@ -1,4 +1,4 @@
-"""Process-pool fitness under the spawn start method (T7, PicklingError fix)."""
+"""Process-pool fitness under the spawn start method (PicklingError fix)."""
 
 import multiprocessing as mp
 import pickle
