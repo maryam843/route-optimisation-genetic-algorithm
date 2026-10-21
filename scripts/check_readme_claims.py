@@ -12,7 +12,8 @@ Checks:
    file:line references, "N/10" rubric scores, whole numbers 0 to 10, and the
    years 2025 and 2026.
 4. Every results/*.json was produced from the last commit that changed src/,
-   with no uncommitted changes in src/.
+   with no uncommitted changes in src/. Skipped, with the reason printed, when
+   there is no full git history (a ZIP download or a shallow clone).
 5. README wording: no "optimal", multi-vehicle or multi-machine claims (unless
    the line says it was not done), no em dashes, no emojis, and no "tested on
    Windows" unless a green Windows CI run is cited.
@@ -185,17 +186,30 @@ def claims(results: Path) -> list[tuple[str, str]]:
     return out
 
 
-def src_commit() -> tuple[str | None, bool | None]:
-    def git(*args):
-        try:
-            return subprocess.run(["git", "-C", str(ROOT), *args], capture_output=True,
-                                  text=True, check=True).stdout.strip()
-        except (OSError, subprocess.CalledProcessError):
-            return None
+def _git(root: Path, *args: str) -> str | None:
+    try:
+        return subprocess.run(["git", "-C", str(root), *args], capture_output=True,
+                              text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
 
-    commit = git("log", "-1", "--format=%H", "--", "src")
-    status = git("status", "--porcelain", "--", "src")
+
+def src_commit(root: Path = ROOT) -> tuple[str | None, bool | None]:
+    commit = _git(root, "log", "-1", "--format=%H", "--", "src")
+    status = _git(root, "status", "--porcelain", "--", "src")
     return commit or None, None if status is None else bool(status)
+
+
+def provenance_skip_reason(root: Path = ROOT) -> str | None:
+    """Why the provenance check cannot run in ``root``, or None if it can."""
+    top = _git(root, "rev-parse", "--show-toplevel")
+    if top is None or Path(top).resolve() != Path(root).resolve():
+        return ("no git history here (for example a ZIP download); "
+                "use a full git clone to check it")
+    if _git(root, "rev-parse", "--is-shallow-repository") == "true":
+        return ("shallow clone, so the last commit that changed src/ may be missing; "
+                "clone without --depth to check it")
+    return None
 
 
 def check_provenance(results: Path) -> list[str]:
@@ -273,7 +287,11 @@ def check(readme: Path, results: Path, extra: list[Path] | None = None,
     for path in extra or []:
         errors += check_numbers(path.read_text(encoding="utf-8"), allowed, path.name)
     if provenance:
-        errors += check_provenance(results)
+        reason = provenance_skip_reason()
+        if reason:
+            print(f"SKIP results provenance check: {reason}")
+        else:
+            errors += check_provenance(results)
     return errors
 
 
@@ -289,8 +307,11 @@ def main(argv: list[str] | None = None) -> int:
     errors = check(args.readme, args.results, extra, provenance=not args.no_provenance)
     for e in errors:
         print("FAIL", e)
+    prov = "results provenance"
+    if args.no_provenance or provenance_skip_reason():
+        prov += " (skipped)"
     print(f"checked {len(render_all(args.results))} tables, {len(claims(args.results))} inline "
-          f"claims, every number in {1 + len(extra)} file(s) and results provenance: "
+          f"claims, every number in {1 + len(extra)} file(s) and {prov}: "
           f"{len(errors)} problems")
     return 1 if errors else 0
 

@@ -83,6 +83,15 @@ def test_repository_readme_matches_results():
     assert errors == []
 
 
+def test_provenance_check_skips_without_full_history(tmp_path):
+    """A ZIP download or a shallow clone skips the commit check with a reason."""
+    assert "ZIP" in check_readme_claims.provenance_skip_reason(tmp_path)
+    shallow = tmp_path / "shallow"
+    subprocess.run(["git", "clone", "-q", "--depth", "1", ROOT.as_uri(), str(shallow)],
+                   check=True)
+    assert "shallow" in check_readme_claims.provenance_skip_reason(shallow)
+
+
 def test_claims_checker_catches_problems(tmp_path):
     readme = tmp_path / "README.md"
     blocks = results_tables.render_all(ROOT / "results")
