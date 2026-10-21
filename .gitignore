@@ -16,3 +16,10 @@ htmlcov/
 *.log
 runs/
 junit.xml
+.DS_Store
+Thumbs.db
+.env
+.env.*
+*.bundle
+.pii_local.txt
+.mypy_cache/
