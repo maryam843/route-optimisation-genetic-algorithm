@@ -3,5 +3,7 @@ pytest==9.1.1
 pytest-cov==7.1.0
 hypothesis==6.168.3
 ruff==0.16.9
+# figures (scripts/make_figures.py); the package itself does not import it
+matplotlib==3.11.2
 # optional reference solver (OR-Tools), used in results and tests
 ortools==9.15.6755

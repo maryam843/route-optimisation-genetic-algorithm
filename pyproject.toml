@@ -15,6 +15,7 @@ dependencies = ["numpy>=2.0"]
 [project.optional-dependencies]
 mpi = ["mpi4py>=4.0"]
 figures = ["matplotlib>=3.8"]
+reference = ["ortools>=9.10"]
 
 [project.scripts]
 route-ga = "route_ga.cli:main"
