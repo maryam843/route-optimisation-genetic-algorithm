@@ -34,7 +34,7 @@ jobs:
         run: ruff check .
       - name: Tests with coverage (MPI tests skip on Windows with a reason)
         run: pytest -rsx --cov=route_ga --cov-report=term-missing --cov-fail-under=85 --junitxml=junit.xml
-      - name: Test summary gate (legacy cases xfailed, no skips except MPI on Windows)
+      - name: Test summary gate (no failures or xfails, no skips except MPI on Windows)
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
