@@ -1,14 +1,15 @@
 {
  "experiment": "map100",
  "environment": {
-  "timestamp_utc": "2026-09-30T18:05:27+00:00",
+  "timestamp_utc": "2026-10-21T04:07:47+00:00",
   "python": "3.12.3",
-  "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
+  "os": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
   "machine": "x86_64",
-  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
   "nproc": 4,
-  "ram_bytes": 16876515328,
+  "ram_bytes": 16874930176,
   "machine_note": "shared cloud VM (4 vCPU); timings can vary between runs",
+  "mpiexec": "mpiexec (OpenRTE) 4.1.6",
   "packages": {
    "numpy": "2.5.3",
    "matplotlib": "3.11.2",
@@ -17,9 +18,9 @@
    "route-ga": "1.0.0"
   },
   "code": {
-   "src_commit": "b29eee97df1bc4faf2155a9ea9f467c0c20fa8fa",
+   "src_commit": "71e3f5eb47641d5953beab5979d6d9130e20a32c",
    "src_dirty": false,
-   "head_commit": "b263c3c58adedfcef72fb45745151625743339b2",
+   "head_commit": "23f02ece5f3b4661adb938380cd95cbc55dfd8bf",
    "scripts_dirty": false
   }
  },
@@ -167,10 +168,10 @@
    "max": 576.0,
    "all_feasible": true,
    "time": {
-    "median": 0.00032490599983248103,
-    "q1": 0.00032294200013893715,
-    "q3": 0.0003494730001420976,
-    "iqr": 2.6531000003160443e-05,
+    "median": 0.0004952949998369149,
+    "q1": 0.00047927800005709287,
+    "q3": 0.00053054299996802,
+    "iqr": 5.1264999910927145e-05,
     "n": 5
    }
   },
@@ -181,10 +182,10 @@
    "max": 434.0,
    "all_feasible": true,
    "time": {
-    "median": 0.003348614000060479,
-    "q1": 0.0033013190000019677,
-    "q3": 0.003514792999794736,
-    "iqr": 0.00021347399979276815,
+    "median": 0.0067722610001510475,
+    "q1": 0.006745263000084378,
+    "q3": 0.007074241999816877,
+    "iqr": 0.0003289789997324988,
     "n": 5
    }
   },
@@ -195,10 +196,10 @@
    "max": 1124.0,
    "all_feasible": true,
    "time": {
-    "median": 17.050833968000006,
-    "q1": 16.448768794999978,
-    "q3": 17.134113126999864,
-    "iqr": 0.685344331999886,
+    "median": 37.33029473800025,
+    "q1": 37.227525330999924,
+    "q3": 37.54265961600004,
+    "iqr": 0.31513428500011287,
     "n": 5
    },
    "gens_to_converge_mean": 1734.6,
@@ -211,10 +212,10 @@
    "max": 582.0,
    "all_feasible": true,
    "time": {
-    "median": 17.055846500000143,
-    "q1": 16.456105637999826,
-    "q3": 17.139623695999944,
-    "iqr": 0.6835180580001179,
+    "median": 37.34505223500037,
+    "q1": 37.23933557999953,
+    "q3": 37.55383089299994,
+    "iqr": 0.3144953130004069,
     "n": 5
    }
   },
@@ -225,19 +226,19 @@
    "max": 1171.0,
    "all_feasible": true,
    "time": {
-    "median": 16.901024161,
-    "q1": 16.094504248,
-    "q3": 17.034121755,
-    "iqr": 0.9396175070000012,
+    "median": 36.902964784,
+    "q1": 36.655778557,
+    "q3": 37.274798383,
+    "iqr": 0.6190198259999988,
     "n": 5
    },
    "gens_to_converge_mean": 1605.0,
    "gens_to_converge_sd": 341.83694943642354,
    "launch_wall": {
-    "median": 17.449984435000033,
-    "q1": 16.644789750999962,
-    "q3": 17.57993204100012,
-    "iqr": 0.935142290000158,
+    "median": 37.57369218799977,
+    "q1": 37.33292489700034,
+    "q3": 37.99626452599978,
+    "iqr": 0.663339628999438,
     "n": 5
    }
   },
@@ -248,29 +249,29 @@
    "max": 1060.0,
    "all_feasible": true,
    "time": {
-    "median": 18.519646623,
-    "q1": 18.380093915,
-    "q3": 18.815261209,
-    "iqr": 0.4351672939999993,
+    "median": 39.22807992,
+    "q1": 38.725176401,
+    "q3": 39.689652702,
+    "iqr": 0.9644763009999977,
     "n": 5
    },
    "gens_to_converge_mean": 1577.8,
    "gens_to_converge_sd": 379.80876767131116,
    "serial_time": {
-    "median": 34.404601619000005,
-    "q1": 33.71345607299986,
-    "q3": 34.42082078999988,
-    "iqr": 0.7073647170000186,
+    "median": 74.46082638799999,
+    "q1": 74.15786721899985,
+    "q3": 74.47870358499995,
+    "iqr": 0.32083636600009413,
     "n": 5
    },
    "all_match_serial": true,
    "matches_serial_count": 5,
-   "speedup_median": 1.8577353185709329,
+   "speedup_median": 1.8981511850657,
    "launch_wall": {
-    "median": 19.11064839400001,
-    "q1": 18.970662607000122,
-    "q3": 19.454393051999887,
-    "iqr": 0.4837304449997646,
+    "median": 39.93816794099985,
+    "q1": 39.41410544599967,
+    "q3": 40.434385825999925,
+    "iqr": 1.0202803800002584,
     "n": 5
    }
   },
@@ -281,29 +282,29 @@
    "max": 1031.0,
    "all_feasible": true,
    "time": {
-    "median": 19.83821581,
-    "q1": 19.704394104,
-    "q3": 20.240384643,
-    "iqr": 0.5359905390000002,
+    "median": 40.34221906,
+    "q1": 39.783556344,
+    "q3": 41.251397167,
+    "iqr": 1.467840823000003,
     "n": 5
    },
    "gens_to_converge_mean": 1843.4,
    "gens_to_converge_sd": 82.96264219514708,
    "serial_time": {
-    "median": 67.07458374700013,
-    "q1": 65.74468498400029,
-    "q3": 67.64260715699993,
-    "iqr": 1.8979221729996425,
+    "median": 149.6614096420003,
+    "q1": 148.66772417500033,
+    "q3": 150.5757362170002,
+    "iqr": 1.908012041999882,
     "n": 5
    },
    "all_match_serial": true,
    "matches_serial_count": 5,
-   "speedup_median": 3.3810794473356487,
+   "speedup_median": 3.709796167122402,
    "launch_wall": {
-    "median": 20.6937172559999,
-    "q1": 20.62879020299988,
-    "q3": 21.10845819699989,
-    "iqr": 0.47966799400001037,
+    "median": 41.19478742500041,
+    "q1": 40.69266280000011,
+    "q3": 42.130987145999825,
+    "iqr": 1.4383243459997175,
     "n": 5
    }
   },
@@ -314,10 +315,10 @@
    "max": 560.0,
    "all_feasible": true,
    "time": {
-    "median": 19.844308547000082,
-    "q1": 19.70917277400008,
-    "q3": 20.244953358000203,
-    "iqr": 0.535780584000122,
+    "median": 40.35457063700005,
+    "q1": 39.797560921999775,
+    "q3": 41.26049075800029,
+    "iqr": 1.4629298360005123,
     "n": 5
    }
   }
@@ -330,7 +331,7 @@
    "cost": 576.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.00032490599983248103,
+   "time_s": 0.0007297110000763496,
    "tour": [
     0,
     70,
@@ -442,7 +443,7 @@
    "cost": 434.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.0032585690000814793,
+   "time_s": 0.010981612999785284,
    "tour": [
     0,
     70,
@@ -554,7 +555,7 @@
    "cost": 1117.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 16.252064449000045,
+   "time_s": 37.54265961600004,
    "tour": [
     0,
     57,
@@ -2671,7 +2672,7 @@
    "cost": 582.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 16.25595228399993,
+   "time_s": 37.55383089299994,
    "tour": [
     0,
     70,
@@ -2783,7 +2784,7 @@
    "cost": 1083.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 16.094504248,
+   "time_s": 38.019540215,
    "tour": [
     0,
     70,
@@ -2887,7 +2888,7 @@
     57,
     0
    ],
-   "launch_wall_s": 16.644789750999962,
+   "launch_wall_s": 38.69026050100001,
    "backend": "mpi(1)",
    "island_best_costs": [
     1083.0
@@ -4905,7 +4906,7 @@
    "cost": 1038.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 18.380093915,
+   "time_s": 40.191039719,
    "tour": [
     0,
     70,
@@ -5009,14 +5010,14 @@
     84,
     0
    ],
-   "launch_wall_s": 18.970662607000122,
+   "launch_wall_s": 40.90188879699963,
    "backend": "mpi(2)",
    "island_best_costs": [
     1038.0,
     1038.0
    ],
    "restarts": 17,
-   "serial_time_s": 33.71345607299986,
+   "serial_time_s": 74.46082638799999,
    "matches_serial": true,
    "history": [
     1104162.0,
@@ -7030,7 +7031,7 @@
    "cost": 952.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 19.83821581,
+   "time_s": 41.5043678,
    "tour": [
     0,
     23,
@@ -7134,7 +7135,7 @@
     5,
     0
    ],
-   "launch_wall_s": 20.62879020299988,
+   "launch_wall_s": 42.59102465600017,
    "backend": "mpi(4)",
    "island_best_costs": [
     952.0,
@@ -7143,7 +7144,7 @@
     952.0
    ],
    "restarts": 15,
-   "serial_time_s": 67.64260715699993,
+   "serial_time_s": 149.6614096420003,
    "matches_serial": true,
    "history": [
     904480.0,
@@ -9157,7 +9158,7 @@
    "cost": 510.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 19.844308547000082,
+   "time_s": 41.5174081680002,
    "tour": [
     0,
     5,
@@ -9269,7 +9270,7 @@
    "cost": 576.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.00021924500015302328,
+   "time_s": 0.0004952949998369149,
    "tour": [
     0,
     70,
@@ -9381,7 +9382,7 @@
    "cost": 434.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.0033013190000019677,
+   "time_s": 0.007074241999816877,
    "tour": [
     0,
     70,
@@ -9493,7 +9494,7 @@
    "cost": 1124.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.134113126999864,
+   "time_s": 37.227525330999924,
    "tour": [
     0,
     5,
@@ -11610,7 +11611,7 @@
    "cost": 512.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.139623695999944,
+   "time_s": 37.23933557999953,
    "tour": [
     0,
     70,
@@ -11722,7 +11723,7 @@
    "cost": 1171.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.034121755,
+   "time_s": 36.902964784,
    "tour": [
     0,
     81,
@@ -11826,7 +11827,7 @@
     77,
     0
    ],
-   "launch_wall_s": 17.57993204100012,
+   "launch_wall_s": 37.57369218799977,
    "backend": "mpi(1)",
    "island_best_costs": [
     1171.0
@@ -13844,7 +13845,7 @@
    "cost": 1060.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 18.815261209,
+   "time_s": 39.22807992,
    "tour": [
     0,
     17,
@@ -13948,14 +13949,14 @@
     10,
     0
    ],
-   "launch_wall_s": 19.454393051999887,
+   "launch_wall_s": 39.93816794099985,
    "backend": "mpi(2)",
    "island_best_costs": [
     1060.0,
     1060.0
    ],
    "restarts": 15,
-   "serial_time_s": 34.42082078999988,
+   "serial_time_s": 74.15786721899985,
    "matches_serial": true,
    "history": [
     604943.0,
@@ -15969,7 +15970,7 @@
    "cost": 910.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 19.704394104,
+   "time_s": 41.251397167,
    "tour": [
     0,
     16,
@@ -16073,7 +16074,7 @@
     23,
     0
    ],
-   "launch_wall_s": 20.6937172559999,
+   "launch_wall_s": 42.130987145999825,
    "backend": "mpi(4)",
    "island_best_costs": [
     910.0,
@@ -16082,7 +16083,7 @@
     910.0
    ],
    "restarts": 14,
-   "serial_time_s": 68.67269333400009,
+   "serial_time_s": 152.50301203599975,
    "matches_serial": true,
    "history": [
     604943.0,
@@ -18096,7 +18097,7 @@
    "cost": 560.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 19.70917277400008,
+   "time_s": 41.26049075800029,
    "tour": [
     0,
     53,
@@ -18208,7 +18209,7 @@
    "cost": 576.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.00032294200013893715,
+   "time_s": 0.00053054299996802,
    "tour": [
     0,
     70,
@@ -18320,7 +18321,7 @@
    "cost": 434.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.003348614000060479,
+   "time_s": 0.006745263000084378,
    "tour": [
     0,
     70,
@@ -18432,7 +18433,7 @@
    "cost": 1029.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 16.448768794999978,
+   "time_s": 38.87342567299993,
    "tour": [
     0,
     81,
@@ -20549,7 +20550,7 @@
    "cost": 520.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 16.456105637999826,
+   "time_s": 38.88889888599988,
    "tour": [
     0,
     81,
@@ -20661,7 +20662,7 @@
    "cost": 1151.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 15.854649381,
+   "time_s": 37.274798383,
    "tour": [
     0,
     57,
@@ -20765,7 +20766,7 @@
     18,
     0
    ],
-   "launch_wall_s": 16.40713338599994,
+   "launch_wall_s": 37.99626452599978,
    "backend": "mpi(1)",
    "island_best_costs": [
     1151.0
@@ -22783,7 +22784,7 @@
    "cost": 1001.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 19.683526442,
+   "time_s": 39.689652702,
    "tour": [
     0,
     83,
@@ -22887,14 +22888,14 @@
     47,
     0
    ],
-   "launch_wall_s": 20.27526672399995,
+   "launch_wall_s": 40.434385825999925,
    "backend": "mpi(2)",
    "island_best_costs": [
     1001.0,
     1001.0
    ],
    "restarts": 14,
-   "serial_time_s": 34.404601619000005,
+   "serial_time_s": 75.9176986020002,
    "matches_serial": true,
    "history": [
     804942.0,
@@ -24908,7 +24909,7 @@
    "cost": 1031.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 21.121701613,
+   "time_s": 39.783556344,
    "tour": [
     0,
     66,
@@ -25012,7 +25013,7 @@
     5,
     0
    ],
-   "launch_wall_s": 21.901554239999996,
+   "launch_wall_s": 40.69266280000011,
    "backend": "mpi(4)",
    "island_best_costs": [
     1031.0,
@@ -25021,7 +25022,7 @@
     1031.0
    ],
    "restarts": 13,
-   "serial_time_s": 67.07458374700013,
+   "serial_time_s": 150.5757362170002,
    "matches_serial": true,
    "history": [
     704667.0,
@@ -27035,7 +27036,7 @@
    "cost": 539.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 21.130568408999807,
+   "time_s": 39.797560921999775,
    "tour": [
     0,
     66,
@@ -27147,7 +27148,7 @@
    "cost": 576.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.0003494730001420976,
+   "time_s": 0.00047927800005709287,
    "tour": [
     0,
     70,
@@ -27259,7 +27260,7 @@
    "cost": 434.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.005105864000142901,
+   "time_s": 0.0067722610001510475,
    "tour": [
     0,
     70,
@@ -27371,7 +27372,7 @@
    "cost": 999.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.050833968000006,
+   "time_s": 37.15193778399998,
    "tour": [
     0,
     17,
@@ -29488,7 +29489,7 @@
    "cost": 570.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.055846500000143,
+   "time_s": 37.161822361000304,
    "tour": [
     0,
     47,
@@ -29600,7 +29601,7 @@
    "cost": 1020.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 18.023160234,
+   "time_s": 36.570909612,
    "tour": [
     0,
     66,
@@ -29704,7 +29705,7 @@
     5,
     0
    ],
-   "launch_wall_s": 18.5907498869999,
+   "launch_wall_s": 37.23691608800027,
    "backend": "mpi(1)",
    "island_best_costs": [
     1020.0
@@ -31722,7 +31723,7 @@
    "cost": 1005.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 18.519646623,
+   "time_s": 38.725176401,
    "tour": [
     0,
     57,
@@ -31826,14 +31827,14 @@
     70,
     0
    ],
-   "launch_wall_s": 19.11064839400001,
+   "launch_wall_s": 39.41410544599967,
    "backend": "mpi(2)",
    "island_best_costs": [
     1005.0,
     1005.0
    ],
    "restarts": 6,
-   "serial_time_s": 33.084624691000045,
+   "serial_time_s": 74.08632202399986,
    "matches_serial": true,
    "history": [
     1004776.0,
@@ -33847,7 +33848,7 @@
    "cost": 946.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 18.441011968,
+   "time_s": 39.390496245,
    "tour": [
     0,
     80,
@@ -33951,7 +33952,7 @@
     70,
     0
    ],
-   "launch_wall_s": 19.189800660999936,
+   "launch_wall_s": 40.290782261000004,
    "backend": "mpi(4)",
    "island_best_costs": [
     946.0,
@@ -33960,7 +33961,7 @@
     946.0
    ],
    "restarts": 18,
-   "serial_time_s": 65.12861985099994,
+   "serial_time_s": 147.92013619199997,
    "matches_serial": true,
    "history": [
     804526.0,
@@ -35974,7 +35975,7 @@
    "cost": 531.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 18.446117704000244,
+   "time_s": 39.39961602099993,
    "tour": [
     0,
     5,
@@ -36086,7 +36087,7 @@
    "cost": 576.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.0003971720000208734,
+   "time_s": 0.0004758300001412863,
    "tour": [
     0,
     70,
@@ -36198,7 +36199,7 @@
    "cost": 434.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 0.003514792999794736,
+   "time_s": 0.006366355999944062,
    "tour": [
     0,
     70,
@@ -36310,7 +36311,7 @@
    "cost": 1037.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.307912919000046,
+   "time_s": 37.33029473800025,
    "tour": [
     0,
     16,
@@ -38427,7 +38428,7 @@
    "cost": 579.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.31592443999989,
+   "time_s": 37.34505223500037,
    "tour": [
     0,
     66,
@@ -38539,7 +38540,7 @@
    "cost": 925.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 16.901024161,
+   "time_s": 36.655778557,
    "tour": [
     0,
     79,
@@ -38643,7 +38644,7 @@
     4,
     0
    ],
-   "launch_wall_s": 17.449984435000033,
+   "launch_wall_s": 37.33292489700034,
    "backend": "mpi(1)",
    "island_best_costs": [
     925.0
@@ -40661,7 +40662,7 @@
    "cost": 924.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 17.83172372,
+   "time_s": 38.219935951,
    "tour": [
     0,
     1,
@@ -40765,14 +40766,14 @@
     66,
     0
    ],
-   "launch_wall_s": 18.42564695200008,
+   "launch_wall_s": 38.9466484769996,
    "backend": "mpi(2)",
    "island_best_costs": [
     924.0,
     924.0
    ],
    "restarts": 12,
-   "serial_time_s": 34.87811398300005,
+   "serial_time_s": 74.47870358499995,
    "matches_serial": true,
    "history": [
     904351.0,
@@ -42786,7 +42787,7 @@
    "cost": 999.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 20.240384643,
+   "time_s": 40.34221906,
    "tour": [
     0,
     57,
@@ -42890,7 +42891,7 @@
     70,
     0
    ],
-   "launch_wall_s": 21.10845819699989,
+   "launch_wall_s": 41.19478742500041,
    "backend": "mpi(4)",
    "island_best_costs": [
     999.0,
@@ -42899,7 +42900,7 @@
     999.0
    ],
    "restarts": 19,
-   "serial_time_s": 65.74468498400029,
+   "serial_time_s": 148.66772417500033,
    "matches_serial": true,
    "history": [
     904351.0,
@@ -44913,7 +44914,7 @@
    "cost": 498.0,
    "feasible": true,
    "missing_edges": 0,
-   "time_s": 20.244953358000203,
+   "time_s": 40.35457063700005,
    "tour": [
     0,
     57,
