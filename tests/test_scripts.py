@@ -38,6 +38,9 @@ def test_quick_results_have_provenance(quick_results):
         env = data["environment"]
         assert env["timestamp_utc"] and env["python"] and env["nproc"] and env["os"]
         assert "cpu_model" in env and "ram_bytes" in env
+        assert "mpiexec" in env
+        if MPI_OK:
+            assert "mpi" in env["mpiexec"].lower()
         assert env["code"]["src_commit"] is None or len(env["code"]["src_commit"]) == 40
     assert (quick_results / "tables.md").exists()
 

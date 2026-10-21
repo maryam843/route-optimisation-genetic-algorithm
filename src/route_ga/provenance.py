@@ -6,6 +6,7 @@ import datetime as dt
 import importlib.metadata as md
 import os
 import platform
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -36,6 +37,22 @@ def ram_bytes() -> int | None:
         return int(os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES"))
     except (AttributeError, ValueError, OSError):
         return None
+
+
+def mpiexec_version() -> str | None:
+    """First line of ``mpiexec --version``, or None when mpiexec is not on PATH."""
+    from route_ga.islands_mpi import clean_mpi_env
+
+    exe = shutil.which("mpiexec")
+    if exe is None:
+        return None
+    try:
+        out = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=30,
+                             env=clean_mpi_env())
+    except (OSError, subprocess.SubprocessError):
+        return None
+    lines = out.stdout.strip().splitlines()
+    return lines[0].strip() if lines else None
 
 
 def _git(*args: str) -> str | None:
@@ -71,6 +88,7 @@ def environment_info(machine_note: str | None = None) -> dict:
         "nproc": os.cpu_count(),
         "ram_bytes": ram_bytes(),
         "machine_note": machine_note or os.environ.get("ROUTE_GA_MACHINE_NOTE") or None,
+        "mpiexec": mpiexec_version(),
         "packages": {p: _version(p) for p in ("numpy", "matplotlib", "mpi4py", "ortools",
                                               "route-ga")},
         "code": code_version(),
