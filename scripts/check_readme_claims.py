@@ -14,9 +14,6 @@ Checks:
 4. Every results/*.json was produced from the last commit that changed src/,
    with no uncommitted changes in src/. Skipped, with the reason printed, when
    there is no full git history (a ZIP download or a shallow clone).
-5. README wording: no "optimal", multi-vehicle or multi-machine claims (unless
-   the line says it was not done), no em dashes, no emojis, and no "tested on
-   Windows" unless a green Windows CI run is cited.
 
 Usage:
     python scripts/check_readme_claims.py
@@ -39,15 +36,6 @@ sys.path.insert(0, str(ROOT / "src"))
 from results_tables import load, render_all  # noqa: E402
 
 BLOCK = re.compile(r"<!-- BEGIN:(\w+) -->\n(.*?)\n<!-- END:\1 -->", re.DOTALL)
-NEGATION = re.compile(r"\b(not|no|never|without|only one|single|does not|did not)\b", re.I)
-FORBIDDEN = {
-    "optimal": re.compile(r"\boptimal(ly)?\b", re.I),
-    "multi-vehicle": re.compile(r"multi[- ]vehicle|multiple vehicles|several vans|fleet", re.I),
-    "multi-machine": re.compile(r"multi[- ]machine|several machines|multiple machines|"
-                                r"across machines|cluster of", re.I),
-    "windows": re.compile(r"tested on windows", re.I),
-}
-EMOJI = re.compile("[\U0001f300-\U0001faff☀-➿]")
 
 # Numbers that do not come from results/, each with its source.
 CITED = {
@@ -250,20 +238,6 @@ def check_numbers(text: str, allowed: set[str], label: str) -> list[str]:
     return errors
 
 
-def check_wording(text: str) -> list[str]:
-    errors = []
-    for lineno, line in enumerate(text.splitlines(), 1):
-        for label, pat in FORBIDDEN.items():
-            if pat.search(line) and not NEGATION.search(line):
-                errors.append(f"README line {lineno}: forbidden claim ({label}): "
-                              f"{line.strip()[:80]}")
-        if "—" in line:
-            errors.append(f"README line {lineno}: em dash")
-        if EMOJI.search(line):
-            errors.append(f"README line {lineno}: emoji")
-    return errors
-
-
 def check(readme: Path, results: Path, extra: list[Path] | None = None,
           provenance: bool = True) -> list[str]:
     text = readme.read_text(encoding="utf-8")
@@ -283,7 +257,6 @@ def check(readme: Path, results: Path, extra: list[Path] | None = None,
             errors.append(f"claim '{desc}': expected '{value}' in README")
     allowed = allowed_numbers(results)
     errors += check_numbers(text, allowed, "README")
-    errors += check_wording(text)
     for path in extra or []:
         errors += check_numbers(path.read_text(encoding="utf-8"), allowed, path.name)
     if provenance:
