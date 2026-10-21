@@ -22,7 +22,7 @@ MPI_OK, MPI_REASON = mpi_available()
 @pytest.fixture(scope="module")
 def quick_results(tmp_path_factory):
     out = tmp_path_factory.mktemp("results")
-    only = ["legacy", "tuning", "anchor", "fitness", "reference"]
+    only = ["tuning", "anchor", "fitness", "reference"]
     if MPI_OK:
         only.append("map32")
     args = ["--quick", "--out-dir", str(out)]

@@ -313,29 +313,6 @@ def exp_fitness(out_dir: Path, quick: bool) -> None:
         "summary": summary, "runs": rows})
 
 
-# ---------------------------------------------------------------- legacy
-def exp_legacy(out_dir: Path, quick: bool) -> None:
-    """Re-run the 2025 loop (transcribed, lambdas removed) to document the bugs."""
-    sys.path.insert(0, str(ROOT / "tests"))
-    from legacy_2025 import legacy_ga_loop
-
-    d = load_map(32)
-    pop, gens = (50, 5) if quick else (300, 60)
-    recs = legacy_ga_loop(d, population_size=pop, num_generations=gens, seed=42)
-    chosen = [-r["chosen_fitness"] for r in recs]
-    shortest = [r["shortest_in_population"] for r in recs]
-    save(out_dir, "legacy_2025", {
-        "map": 32, "population_size": pop, "generations": gens, "seed": 42,
-        "note": "tests/legacy_2025.py: 2025 loop with the process pools replaced by map(). "
-                "Random numbers are drawn in one process, so per-generation values differ "
-                "from a pool run; the first and last values match the Phase 0 pool run.",
-        "chosen_best_first": chosen[0], "chosen_best_last": chosen[-1],
-        "shortest_in_population_first": shortest[0], "shortest_in_population_last": shortest[-1],
-        "generations_where_even_the_shortest_route_uses_a_missing_edge":
-            sum(x >= MISSING_EDGE for x in shortest),
-        "chosen_best": chosen, "shortest_in_population": shortest})
-
-
 # ---------------------------------------------------------------- reference
 def exp_reference(out_dir: Path, quick: bool) -> None:
     """OR-Tools guided local search: reference solver, not proven optimal."""
@@ -364,9 +341,7 @@ def exp_reference(out_dir: Path, quick: bool) -> None:
         "time_limit_s": limit, "repeats": repeats, "maps": out})
 
 
-EXPERIMENTS = ("phase0", "legacy", "tuning", "anchor", "map32", "map100", "map32_quick40",
-               "reference",
-               "fitness")
+EXPERIMENTS = ("tuning", "anchor", "map32", "map100", "map32_quick40", "reference", "fitness")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -381,13 +356,7 @@ def main(argv: list[str] | None = None) -> int:
     todo = args.only or list(EXPERIMENTS)
     for name in todo:
         t0 = time.perf_counter()
-        if name == "phase0":
-            from phase0_check import run as phase0_run
-
-            phase0_run(args.out_dir)
-        elif name == "legacy":
-            exp_legacy(args.out_dir, args.quick)
-        elif name == "tuning":
+        if name == "tuning":
             exp_tuning(args.out_dir, args.quick)
         elif name == "anchor":
             exp_anchor(args.out_dir, args.quick)
