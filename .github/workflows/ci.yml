@@ -65,4 +65,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Scan full git history for personal data and secrets
+        env:
+          PII_EXTRA_PATTERNS: ${{ secrets.PII_EXTRA_PATTERNS }}  # optional, may be unset
         run: python scripts/pii_scan.py
