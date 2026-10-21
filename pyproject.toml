@@ -7,7 +7,7 @@ name = "route-ga"
 version = "1.0.0"
 description = "Genetic algorithm, 2-opt and MPI island model for a single-vehicle delivery tour"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"  # CI tests 3.12; no mpi4py 4.1.2 wheel for 3.13
 license = { text = "MIT" }
 authors = [{ name = "Maryam Mahaboob" }]
 dependencies = ["numpy>=2.0"]
