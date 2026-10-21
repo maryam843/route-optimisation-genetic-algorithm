@@ -3,7 +3,5 @@ pytest==9.1.1
 pytest-cov==7.1.0
 hypothesis==6.168.3
 ruff==0.16.9
-# needed to run the real 2025 code in the regression tests (never skipped)
-pandas==3.0.6
 # optional reference solver (OR-Tools), used in results and tests
 ortools==9.15.6755
