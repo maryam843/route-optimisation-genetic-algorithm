@@ -1,14 +1,15 @@
 {
  "experiment": "quality",
  "environment": {
-  "timestamp_utc": "2026-10-01T19:34:31+00:00",
+  "timestamp_utc": "2026-10-21T22:57:12+00:00",
   "python": "3.12.3",
-  "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
+  "os": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
   "machine": "x86_64",
   "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
   "nproc": 4,
-  "ram_bytes": 16876515328,
-  "machine_note": null,
+  "ram_bytes": 16874930176,
+  "machine_note": "shared cloud VM (4 vCPU); timings can vary between runs",
+  "mpiexec": "mpiexec (OpenRTE) 4.1.6",
   "packages": {
    "numpy": "2.5.3",
    "matplotlib": "3.11.2",
@@ -17,43 +18,43 @@
    "route-ga": "1.0.0"
   },
   "code": {
-   "src_commit": "b29eee97df1bc4faf2155a9ea9f467c0c20fa8fa",
+   "src_commit": "71e3f5eb47641d5953beab5979d6d9130e20a32c",
    "src_dirty": false,
-   "head_commit": "a4a1c60adfe566fc43141a20a123a9134e2ed27b",
+   "head_commit": "b02bf19ac42f2cf3312d8772c035a1c301c2c842",
    "scripts_dirty": false
   }
  },
  "tests": {
   "returncode": 0,
-  "collected": 97,
-  "passed": 90,
+  "collected": 94,
+  "passed": 94,
   "failed": 0,
-  "xfailed": 7,
+  "xfailed": 0,
   "skipped": 0,
   "skip_reasons": [],
-  "coverage_pct": 93.3
+  "coverage_pct": 92.4
  },
  "tests_without_mpi": {
   "returncode": 0,
-  "collected": 97,
-  "passed": 87,
+  "collected": 94,
+  "passed": 90,
   "failed": 0,
-  "xfailed": 7,
-  "skipped": 3,
+  "xfailed": 0,
+  "skipped": 4,
   "skip_reasons": [
    "MPI switched off by ROUTE_GA_NO_MPI (coverage run without MPI)"
   ],
-  "coverage_pct": 87.9
+  "coverage_pct": 87.5
  },
  "code": {
   "python_lines": {
-   "src": 1041,
-   "tests": 1106,
-   "scripts": 1676
+   "src": 1076,
+   "tests": 981,
+   "scripts": 1523
   },
-  "tracked_files": 69,
-  "tracked_bytes": 1790676,
+  "tracked_files": 62,
+  "tracked_bytes": 1851243,
   "largest_file": "results/map100.json",
-  "largest_file_bytes": 524618
+  "largest_file_bytes": 524601
  }
 }
