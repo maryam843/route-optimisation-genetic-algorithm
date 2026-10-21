@@ -34,6 +34,14 @@ def test_worker_function_is_picklable():
     assert pickle.loads(pickle.dumps(_chunk_costs)) is _chunk_costs
 
 
+def test_uninitialised_worker_raises(monkeypatch):
+    import route_ga.parallel_fitness as pf
+
+    monkeypatch.setattr(pf, "_WORKER_COST", None)
+    with pytest.raises(RuntimeError, match="not initialised"):
+        _chunk_costs((np.zeros((1, 3), dtype=np.int64), "numpy"))
+
+
 @pytest.mark.parametrize("kernel", ["python", "numpy"])
 def test_pool_matches_sequential(kernel):
     cost = cost_matrix(load_map(32))

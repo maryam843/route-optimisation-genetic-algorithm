@@ -50,7 +50,8 @@ def _init_worker(cost: np.ndarray) -> None:
 
 def _chunk_costs(args: tuple[np.ndarray, str]) -> np.ndarray:
     chunk, kernel = args
-    assert _WORKER_COST is not None, "worker not initialised"
+    if _WORKER_COST is None:
+        raise RuntimeError("worker not initialised: create the pool through PoolEvaluator")
     if kernel == "numpy":
         return population_costs(chunk, _WORKER_COST)
     return costs_python(chunk, _WORKER_COST)
