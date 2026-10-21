@@ -35,8 +35,13 @@ def test_order_crossover_keeps_parent1_segment():
     p2 = p1[::-1].copy()
     child = order_crossover(p1, p2, rng)
     assert sorted(child.tolist()) == list(range(1, 11))
-    # Some slice of p1 is copied in place.
-    assert any(child[i] == p1[i] for i in range(10))
+    # The cut points are the first draw from the same generator. The segment
+    # p1[start..end] is copied in place; the other positions follow p2's order.
+    start, end = sorted(np.random.default_rng(5).choice(10, size=2, replace=False))
+    segment = p1[start : end + 1].tolist()
+    assert child[start : end + 1].tolist() == segment
+    rest = [x for x in p2.tolist() if x not in segment]
+    assert child[:start].tolist() + child[end + 1 :].tolist() == rest
 
 
 def test_order_crossover_tiny():
