@@ -1,7 +1,7 @@
 """Run every experiment reported in the README and save raw results.
 
 Usage:
-    python scripts/run_experiments.py                # everything (about 40 min on 4 cores)
+    python scripts/run_experiments.py                # everything (about half an hour on 4 cores)
     python scripts/run_experiments.py --machine-note "shared cloud VM"
     python scripts/run_experiments.py --only anchor  # one experiment
     python scripts/run_experiments.py --quick --out-dir /tmp/r   # tiny smoke run
