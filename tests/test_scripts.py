@@ -117,8 +117,23 @@ NOREPLY = "185722545+maryam843@users.noreply.github.com"
 
 def test_pii_scan_detects(tmp_path):
     assert pii_scan.check_text(f"mail me at {FAKE_EMAIL}", "x")
-    assert pii_scan.check_text(f"id {FAKE_ID}", "x")
+    assert pii_scan.check_text("saved in " + "/home/" + "someone/run.json", "x")
     assert not pii_scan.check_text("185722545+maryam843@users.noreply.github.com", "x")
+    assert not pii_scan.check_text(f"id {FAKE_ID}", "x")
+
+
+def test_pii_scan_extra_patterns_stay_out_of_the_repo(tmp_path, monkeypatch):
+    """Personal patterns come from an untracked file or an environment variable."""
+    monkeypatch.delenv(pii_scan.ENV_VAR, raising=False)
+    assert pii_scan.extra_patterns(tmp_path) == {}
+    monkeypatch.setenv(pii_scan.ENV_VAR, "# comment\n" + FAKE_ID[:3] + r"\d{5}")
+    extra = pii_scan.extra_patterns(tmp_path)
+    hits = pii_scan.check_text(f"id {FAKE_ID}", "x", extra)
+    assert hits == ["x: extra_1: [match hidden]"]
+    monkeypatch.delenv(pii_scan.ENV_VAR)
+    (tmp_path / pii_scan.LOCAL_FILE).write_text("some" + "one\n", encoding="utf-8")
+    hits = pii_scan.check_text(f"mail me at {FAKE_EMAIL}", "x", pii_scan.extra_patterns(tmp_path))
+    assert hits[-1] == "x: extra_1: [match hidden]"
 
 
 def test_pii_scan_on_new_repo(tmp_path):
