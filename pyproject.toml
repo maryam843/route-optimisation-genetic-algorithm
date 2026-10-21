@@ -19,8 +19,14 @@ figures = ["matplotlib>=3.8"]
 [project.scripts]
 route-ga = "route_ga.cli:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+# The course maps stay in data/ at the repo root and are shipped inside the
+# package as route_ga.maps, so a non-editable install can find them.
+packages = ["route_ga", "route_ga.maps"]
+package-dir = { "" = "src", "route_ga.maps" = "data" }
+
+[tool.setuptools.package-data]
+"route_ga.maps" = ["*.csv"]
 
 [tool.ruff]
 line-length = 100

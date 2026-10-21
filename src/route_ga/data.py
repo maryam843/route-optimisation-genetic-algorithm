@@ -9,6 +9,7 @@ The 2025 code compared against 10000, so the penalty never fired.
 
 from __future__ import annotations
 
+from importlib import resources
 from pathlib import Path
 
 import numpy as np
@@ -16,11 +17,25 @@ import numpy as np
 MISSING_EDGE = 100_000.0
 DEPOT = 0
 
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 MAP_FILES = {
     32: "city_distances.csv",
     100: "city_distances_extended.csv",
 }
+
+
+def _find_data_dir() -> Path:
+    """Folder with the map CSVs.
+
+    An installed package ships them as ``route_ga.maps`` (package data). A
+    source checkout used without installing falls back to ``data/``.
+    """
+    packaged = Path(str(resources.files("route_ga"))) / "maps"
+    if (packaged / MAP_FILES[32]).is_file():
+        return packaged
+    return Path(__file__).resolve().parents[2] / "data"
+
+
+DATA_DIR = _find_data_dir()
 
 
 def load_matrix(path: str | Path) -> np.ndarray:
