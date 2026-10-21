@@ -52,6 +52,12 @@ EMOJI = re.compile("[\U0001f300-\U0001faff☀-➿]")
 CITED = {
     "25": "share of the 2025 code that was mine (lower bound), audit DSAI3202__A1-P2_AUDIT.md",
     "30": "share of the 2025 code that was mine (upper bound), same audit",
+    # 2025 loop with the process pool removed (population 300, 60 generations,
+    # seed 42), measured before the 2025 code was taken out of the repo.
+    "1,300,840": "2025 route called 'best', generation 0",
+    "1,400,983": "2025 route called 'best', last generation",
+    "101,498": "2025 shortest route in the population, generation 0",
+    "201,175": "2025 shortest route in the population, last generation",
 }
 
 NUMBER = re.compile(r"(?<![\w.:/#@$\\-])-?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?=x\b|(?![\w.]\w))")
@@ -154,14 +160,6 @@ def allowed_numbers(results: Path) -> set[str]:
 def claims(results: Path) -> list[tuple[str, str]]:
     """(description, exact text that must appear in the README)."""
     out: list[tuple[str, str]] = []
-    leg = load(results, "legacy_2025")
-    if leg:
-        out += [
-            ("2025 chosen 'best' at generation 0", fmt0(leg["chosen_best_first"])),
-            ("2025 chosen 'best' at the end", fmt0(leg["chosen_best_last"])),
-            ("2025 shortest route at generation 0", fmt0(leg["shortest_in_population_first"])),
-            ("2025 shortest route at the end", fmt0(leg["shortest_in_population_last"])),
-        ]
     from results_tables import best_found
 
     for n in (32, 100):
