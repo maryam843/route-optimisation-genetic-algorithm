@@ -10,7 +10,7 @@ Originally built for DSAI3202 Parallel & Distributed Computing, UDST, Spring 202
 - **The problem:** every extra kilometre costs fuel and driver time, and some pairs of stops have no road between them, so a plan has to avoid those.
 - **How it works:** it reads a table of distances between stops, builds many candidate routes, keeps and mixes the shorter ones for 1,000 to 2,000 generations (the GA), can run several populations in parallel with MPI, and saves the best route with its length to a JSON file.
 - **2025 vs 2026:** in 2025 I completed two functions of a course-provided GA and tried to parallelise it; it crashed and, once it ran, kept the worst routes. In 2026 I fixed every bug, rebuilt it as a tested package, and added baselines, an MPI island model, a reference solver and measured experiments.
-- **Main result (with the caveat):** my GA is not competitive. On the 100-node map it averaged 1,061, simple nearest neighbour + 2-opt found 434, and the OR-Tools reference solver found 338. What does work is the MPI version: identical routes to the serial version, 3.38 times faster with 4 MPI processes on one 4-core machine.
+- **Main result (with the caveat):** my GA is not competitive. On the 100-node map it averaged 1,061, simple nearest neighbour + 2-opt found 434, and the OR-Tools reference solver found 338. What does work is the MPI version: identical routes to the serial version, 3.71 times faster with 4 MPI processes on one 4-core machine.
 - **Why it matters:** last-mile delivery in Qatar and the Gulf is a routing problem at its core; this project shows I can fix broken optimisation code, measure it honestly against baselines and distribute it with MPI.
 
 ## The problem
@@ -81,12 +81,12 @@ Every number below comes from `scripts/run_experiments.py` and is stored in `res
 |---|---:|---:|---:|---:|---:|---:|
 | Nearest neighbour | 445.0 +/- 0.0 | 445 | 44.5 % | 44.5 % | 0.00 [0.00-0.00] | n/a |
 | Nearest neighbour + 2-opt | 364.0 +/- 0.0 | 364 | 18.2 % | 18.2 % | 0.00 [0.00-0.00] | n/a |
-| GA, single population | 519.6 +/- 29.6 | 493 | 68.7 % | 68.7 % | 8.15 [8.04-8.16] | 668 +/- 280 |
-| GA + 2-opt polish | 397.6 +/- 24.1 | 370 | 29.1 % | 29.1 % | 8.15 [8.04-8.16] | n/a |
-| GA, MPI islands x1 | 519.2 +/- 17.9 | 503 | 68.6 % | 68.6 % | 8.45 [7.82-8.46] | 578 +/- 245 |
-| GA, MPI islands x2 | 454.8 +/- 40.4 | 390 | 47.7 % | 47.7 % | 8.88 [8.87-8.88] | 555 +/- 276 |
-| GA, MPI islands x4 | 424.2 +/- 33.6 | 367 | 37.7 % | 37.7 % | 9.55 [9.47-9.73] | 562 +/- 227 |
-| GA, MPI islands x4 + 2-opt polish | 383.4 +/- 22.5 | 355 | 24.5 % | 24.5 % | 9.55 [9.47-9.73] | n/a |
+| GA, single population | 519.6 +/- 29.6 | 493 | 68.7 % | 68.7 % | 18.43 [18.35-18.48] | 668 +/- 280 |
+| GA + 2-opt polish | 397.6 +/- 24.1 | 370 | 29.1 % | 29.1 % | 18.43 [18.35-18.48] | n/a |
+| GA, MPI islands x1 | 519.2 +/- 17.9 | 503 | 68.6 % | 68.6 % | 18.30 [18.06-18.82] | 578 +/- 245 |
+| GA, MPI islands x2 | 454.8 +/- 40.4 | 390 | 47.7 % | 47.7 % | 19.27 [19.06-19.55] | 555 +/- 276 |
+| GA, MPI islands x4 | 424.2 +/- 33.6 | 367 | 37.7 % | 37.7 % | 20.39 [20.34-20.46] | 562 +/- 227 |
+| GA, MPI islands x4 + 2-opt polish | 383.4 +/- 22.5 | 355 | 24.5 % | 24.5 % | 20.39 [20.34-20.46] | n/a |
 | OR-Tools reference (not proven optimal) | 308.0 +/- 0.0 (5 repeats) | 308 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
 <!-- END:map32 -->
 
@@ -98,13 +98,13 @@ Every number below comes from `scripts/run_experiments.py` and is stored in `res
 | Method | Tour length, mean +/- sd | Best of 5 | Gap to best found | Gap to OR-Tools | Time (s), median [IQR] | Generations to converge |
 |---|---:|---:|---:|---:|---:|---:|
 | Nearest neighbour | 576.0 +/- 0.0 | 576 | 70.4 % | 70.4 % | 0.00 [0.00-0.00] | n/a |
-| Nearest neighbour + 2-opt | 434.0 +/- 0.0 | 434 | 28.4 % | 28.4 % | 0.00 [0.00-0.00] | n/a |
-| GA, single population | 1,061.2 +/- 56.0 | 999 | 214.0 % | 214.0 % | 17.05 [16.45-17.13] | 1,735 +/- 193 |
-| GA + 2-opt polish | 552.6 +/- 33.8 | 512 | 63.5 % | 63.5 % | 17.06 [16.46-17.14] | n/a |
-| GA, MPI islands x1 | 1,070.0 +/- 100.6 | 925 | 216.6 % | 216.6 % | 16.90 [16.09-17.03] | 1,605 +/- 342 |
-| GA, MPI islands x2 | 1,005.6 +/- 51.7 | 924 | 197.5 % | 197.5 % | 18.52 [18.38-18.82] | 1,578 +/- 380 |
-| GA, MPI islands x4 | 967.6 +/- 47.5 | 910 | 186.3 % | 186.3 % | 19.84 [19.70-20.24] | 1,843 +/- 83 |
-| GA, MPI islands x4 + 2-opt polish | 527.6 +/- 24.4 | 498 | 56.1 % | 56.1 % | 19.84 [19.71-20.24] | n/a |
+| Nearest neighbour + 2-opt | 434.0 +/- 0.0 | 434 | 28.4 % | 28.4 % | 0.01 [0.01-0.01] | n/a |
+| GA, single population | 1,061.2 +/- 56.0 | 999 | 214.0 % | 214.0 % | 37.33 [37.23-37.54] | 1,735 +/- 193 |
+| GA + 2-opt polish | 552.6 +/- 33.8 | 512 | 63.5 % | 63.5 % | 37.35 [37.24-37.55] | n/a |
+| GA, MPI islands x1 | 1,070.0 +/- 100.6 | 925 | 216.6 % | 216.6 % | 36.90 [36.66-37.27] | 1,605 +/- 342 |
+| GA, MPI islands x2 | 1,005.6 +/- 51.7 | 924 | 197.5 % | 197.5 % | 39.23 [38.73-39.69] | 1,578 +/- 380 |
+| GA, MPI islands x4 | 967.6 +/- 47.5 | 910 | 186.3 % | 186.3 % | 40.34 [39.78-41.25] | 1,843 +/- 83 |
+| GA, MPI islands x4 + 2-opt polish | 527.6 +/- 24.4 | 498 | 56.1 % | 56.1 % | 40.35 [39.80-41.26] | n/a |
 | OR-Tools reference (not proven optimal) | 338.0 +/- 0.0 (5 repeats) | 338 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
 <!-- END:map100 -->
 
@@ -137,22 +137,22 @@ Each island keeps the full population of 200, so 4 islands do 4 times the work. 
 <!-- BEGIN:islands32 -->
 | Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | Same islands one after another (s), median [IQR] | Speed-up | Same result? |
 |---:|---:|---:|---:|---:|---|
-| 1 | 519.2 +/- 17.9 | 8.45 [7.82-8.46] | n/a | n/a (one island) | n/a |
-| 2 | 454.8 +/- 40.4 | 8.88 [8.87-8.88] | 16.50 [16.46-16.85] | 1.86 times faster | yes, 5 of 5 seeds |
-| 4 | 424.2 +/- 33.6 | 9.55 [9.47-9.73] | 32.51 [31.65-32.99] | 3.41 times faster | yes, 5 of 5 seeds |
+| 1 | 519.2 +/- 17.9 | 18.30 [18.06-18.82] | n/a | n/a (one island) | n/a |
+| 2 | 454.8 +/- 40.4 | 19.27 [19.06-19.55] | 36.78 [36.45-37.04] | 1.91 times faster | yes, 5 of 5 seeds |
+| 4 | 424.2 +/- 33.6 | 20.39 [20.34-20.46] | 73.68 [73.61-73.73] | 3.61 times faster | yes, 5 of 5 seeds |
 <!-- END:islands32 -->
 
 <!-- BEGIN:islands100 -->
 | Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | Same islands one after another (s), median [IQR] | Speed-up | Same result? |
 |---:|---:|---:|---:|---:|---|
-| 1 | 1,070.0 +/- 100.6 | 16.90 [16.09-17.03] | n/a | n/a (one island) | n/a |
-| 2 | 1,005.6 +/- 51.7 | 18.52 [18.38-18.82] | 34.40 [33.71-34.42] | 1.86 times faster | yes, 5 of 5 seeds |
-| 4 | 967.6 +/- 47.5 | 19.84 [19.70-20.24] | 67.07 [65.74-67.64] | 3.38 times faster | yes, 5 of 5 seeds |
+| 1 | 1,070.0 +/- 100.6 | 36.90 [36.66-37.27] | n/a | n/a (one island) | n/a |
+| 2 | 1,005.6 +/- 51.7 | 39.23 [38.73-39.69] | 74.46 [74.16-74.48] | 1.90 times faster | yes, 5 of 5 seeds |
+| 4 | 967.6 +/- 47.5 | 40.34 [39.78-41.25] | 149.66 [148.67-150.58] | 3.71 times faster | yes, 5 of 5 seeds |
 <!-- END:islands100 -->
 
 ![Island scaling](figures/island_scaling.png)
 
-On the 100-node map the 4 islands ran 3.38 times faster with 4 MPI processes on one 4-core machine, compared with the same 4 islands run one after another (3.41 times faster on the 32-node map). The small rise in MPI time from 1 to 4 islands is migration plus 4 processes sharing the machine.
+On the 100-node map the 4 islands ran 3.71 times faster with 4 MPI processes on one 4-core machine, compared with the same 4 islands run one after another (3.61 times faster on the 32-node map). The small rise in MPI time from 1 to 4 islands is migration plus 4 processes sharing the machine.
 
 Each island has a full population, so N islands score about N times as many routes as one population (counted from the saved runs; 2-opt polish not included):
 
@@ -178,14 +178,14 @@ Time to score one population on the 100-node map: median [IQR] over 5 repeats fo
 <!-- BEGIN:fitness -->
 | Population | Python loop, 1 process (ms) | Python loop, 4-process pool (ms) | NumPy, 1 process (ms) | NumPy, 4-process pool (ms) | Whole GA generation (ms) |
 |---:|---:|---:|---:|---:|---:|
-| 500 | 2.5 [2.4-2.7] | 2.6 [2.3-3.4] | 0.2 [0.2-0.3] | 2.1 [1.9-3.6] | 20.0 [19.5-21.0] |
-| 2,000 | 10.0 [9.6-10.5] | 7.5 [6.4-8.4] | 1.2 [1.2-1.4] | 4.2 [3.8-4.7] | 80.2 [71.4-93.5] |
-| 10,000 | 52.1 [50.3-54.6] | 38.3 [31.3-44.7] | 7.4 [6.1-8.6] | 15.2 [14.4-23.4] | 413.1 [395.2-440.0] |
+| 500 | 3.9 [3.8-4.2] | 4.2 [3.9-4.6] | 0.4 [0.4-0.6] | 2.3 [2.3-2.8] | 43.8 [43.2-45.7] |
+| 2,000 | 15.9 [15.3-16.7] | 12.7 [11.7-18.0] | 1.7 [1.6-2.0] | 6.4 [5.4-12.8] | 177.2 [173.7-179.0] |
+| 10,000 | 82.7 [81.3-89.5] | 55.5 [47.8-66.4] | 10.1 [9.1-10.7] | 27.2 [26.1-31.6] | 962.9 [914.9-989.1] |
 <!-- END:fitness -->
 
 - A 4-process pool only helps the slow plain-Python loop, and only from about 2,000 routes up.
-- Vectorised NumPy in one process beats the pool at every size; at 10,000 routes the Python-loop pool is 5 times slower than NumPy in one process.
-- Scoring is a small part of a GA generation (7.4 ms of 413.1 ms at 10,000 routes); breeding children dominates. So the parallel fitness step the 2025 brief asked for is not where the time goes. Running whole islands in parallel with MPI is.
+- Vectorised NumPy in one process beats the pool at every size; at 10,000 routes the Python-loop pool is 6 times slower than NumPy in one process.
+- Scoring is a small part of a GA generation (10.1 ms of 962.9 ms at 10,000 routes); breeding children dominates. So the parallel fitness step the 2025 brief asked for is not where the time goes. Running whole islands in parallel with MPI is.
 
 ### Best route found
 
