@@ -1,14 +1,14 @@
 {
  "experiment": "reconciliation",
  "environment": {
-  "timestamp_utc": "2026-10-21T22:54:11+00:00",
+  "timestamp_utc": "2026-11-10T19:00:56+00:00",
   "python": "3.12.3",
-  "os": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "os": "Linux-6.18.44-fc-v338-x86_64-with-glibc2.39",
   "machine": "x86_64",
   "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
   "nproc": 4,
-  "ram_bytes": 16874930176,
-  "machine_note": "shared cloud VM (4 vCPU); timings can vary between runs",
+  "ram_bytes": 16867737600,
+  "machine_note": null,
   "mpiexec": "mpiexec (OpenRTE) 4.1.6",
   "packages": {
    "numpy": "2.5.3",
@@ -18,9 +18,9 @@
    "route-ga": "1.0.0"
   },
   "code": {
-   "src_commit": "71e3f5eb47641d5953beab5979d6d9130e20a32c",
+   "src_commit": "c3f2fdbb2f533a6f3066708baa397537d82d9c54",
    "src_dirty": false,
-   "head_commit": "ec506a8c7bfd22a451bab2c8d55579098c5a3892",
+   "head_commit": "e8b8d294be2fbd4e4e74d0579ae2d51aed3a25bc",
    "scripts_dirty": false
   }
  },
@@ -113,7 +113,7 @@
   {
    "seen_in": "first OR-Tools trial (5-second limit)",
    "command": "solve_ortools(map 100, time_limit_s=5)",
-   "length": 382.0,
+   "length": 347.0,
    "feasible": true
   }
  ],

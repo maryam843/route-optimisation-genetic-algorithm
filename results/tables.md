@@ -5,43 +5,43 @@
 |---|---:|---:|---:|---:|---:|---:|
 | Nearest neighbour | 445.0 +/- 0.0 | 445 | 44.5 % | 44.5 % | 0.00 [0.00-0.00] | n/a |
 | Nearest neighbour + 2-opt | 364.0 +/- 0.0 | 364 | 18.2 % | 18.2 % | 0.00 [0.00-0.00] | n/a |
-| GA, single population | 519.6 +/- 29.6 | 493 | 68.7 % | 68.7 % | 18.43 [18.35-18.48] | 668 +/- 280 |
-| GA + 2-opt polish | 397.6 +/- 24.1 | 370 | 29.1 % | 29.1 % | 18.43 [18.35-18.48] | n/a |
-| GA, MPI islands x1 | 519.2 +/- 17.9 | 503 | 68.6 % | 68.6 % | 18.30 [18.06-18.82] | 578 +/- 245 |
-| GA, MPI islands x2 | 454.8 +/- 40.4 | 390 | 47.7 % | 47.7 % | 19.27 [19.06-19.55] | 555 +/- 276 |
-| GA, MPI islands x4 | 424.2 +/- 33.6 | 367 | 37.7 % | 37.7 % | 20.39 [20.34-20.46] | 562 +/- 227 |
-| GA, MPI islands x4 + 2-opt polish | 383.4 +/- 22.5 | 355 | 24.5 % | 24.5 % | 20.39 [20.34-20.46] | n/a |
-| OR-Tools reference (not proven optimal) | 308.0 +/- 0.0 (5 repeats) | 308 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
+| GA, single population | 519.6 +/- 29.6 | 493 | 68.7 % | 68.7 % | 6.99 [6.74-7.36] | 668 +/- 280 |
+| GA + 2-opt polish | 397.6 +/- 24.1 | 370 | 29.1 % | 29.1 % | 6.99 [6.74-7.36] | n/a |
+| GA, MPI islands x1 | 519.2 +/- 17.9 | 503 | 68.6 % | 68.6 % | 7.38 [7.11-7.49] | 578 +/- 245 |
+| GA, MPI islands x2 | 454.8 +/- 40.4 | 390 | 47.7 % | 47.7 % | 8.00 [7.92-8.02] | 555 +/- 276 |
+| GA, MPI islands x4 | 424.2 +/- 33.6 | 367 | 37.7 % | 37.7 % | 8.13 [8.09-8.39] | 562 +/- 227 |
+| GA, MPI islands x4 + 2-opt polish | 383.4 +/- 22.5 | 355 | 24.5 % | 24.5 % | 8.13 [8.09-8.39] | n/a |
+| OR-Tools reference (not proven optimal) | best of 5 repeats: 308 | 308 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
 <!-- END:map32 -->
 
 <!-- BEGIN:map100 -->
 | Method | Tour length, mean +/- sd | Best of 5 | Gap to best found | Gap to OR-Tools | Time (s), median [IQR] | Generations to converge |
 |---|---:|---:|---:|---:|---:|---:|
 | Nearest neighbour | 576.0 +/- 0.0 | 576 | 70.4 % | 70.4 % | 0.00 [0.00-0.00] | n/a |
-| Nearest neighbour + 2-opt | 434.0 +/- 0.0 | 434 | 28.4 % | 28.4 % | 0.01 [0.01-0.01] | n/a |
-| GA, single population | 1,061.2 +/- 56.0 | 999 | 214.0 % | 214.0 % | 37.33 [37.23-37.54] | 1,735 +/- 193 |
-| GA + 2-opt polish | 552.6 +/- 33.8 | 512 | 63.5 % | 63.5 % | 37.35 [37.24-37.55] | n/a |
-| GA, MPI islands x1 | 1,070.0 +/- 100.6 | 925 | 216.6 % | 216.6 % | 36.90 [36.66-37.27] | 1,605 +/- 342 |
-| GA, MPI islands x2 | 1,005.6 +/- 51.7 | 924 | 197.5 % | 197.5 % | 39.23 [38.73-39.69] | 1,578 +/- 380 |
-| GA, MPI islands x4 | 967.6 +/- 47.5 | 910 | 186.3 % | 186.3 % | 40.34 [39.78-41.25] | 1,843 +/- 83 |
-| GA, MPI islands x4 + 2-opt polish | 527.6 +/- 24.4 | 498 | 56.1 % | 56.1 % | 40.35 [39.80-41.26] | n/a |
-| OR-Tools reference (not proven optimal) | 338.0 +/- 0.0 (5 repeats) | 338 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
+| Nearest neighbour + 2-opt | 434.0 +/- 0.0 | 434 | 28.4 % | 28.4 % | 0.00 [0.00-0.00] | n/a |
+| GA, single population | 1,061.2 +/- 56.0 | 999 | 214.0 % | 214.0 % | 14.75 [14.46-15.08] | 1,735 +/- 193 |
+| GA + 2-opt polish | 552.6 +/- 33.8 | 512 | 63.5 % | 63.5 % | 14.76 [14.47-15.09] | n/a |
+| GA, MPI islands x1 | 1,070.0 +/- 100.6 | 925 | 216.6 % | 216.6 % | 15.30 [15.25-15.48] | 1,605 +/- 342 |
+| GA, MPI islands x2 | 1,005.6 +/- 51.7 | 924 | 197.5 % | 197.5 % | 16.86 [16.73-16.87] | 1,578 +/- 380 |
+| GA, MPI islands x4 | 967.6 +/- 47.5 | 910 | 186.3 % | 186.3 % | 17.59 [17.39-18.05] | 1,843 +/- 83 |
+| GA, MPI islands x4 + 2-opt polish | 527.6 +/- 24.4 | 498 | 56.1 % | 56.1 % | 17.60 [17.39-18.05] | n/a |
+| OR-Tools reference (not proven optimal) | best of 5 repeats: 338 | 338 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
 <!-- END:map100 -->
 
 <!-- BEGIN:islands32 -->
 | Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | Same islands one after another (s), median [IQR] | Speed-up | Same result? |
 |---:|---:|---:|---:|---:|---|
-| 1 | 519.2 +/- 17.9 | 18.30 [18.06-18.82] | n/a | n/a (one island) | n/a |
-| 2 | 454.8 +/- 40.4 | 19.27 [19.06-19.55] | 36.78 [36.45-37.04] | 1.91 times faster | yes, 5 of 5 seeds |
-| 4 | 424.2 +/- 33.6 | 20.39 [20.34-20.46] | 73.68 [73.61-73.73] | 3.61 times faster | yes, 5 of 5 seeds |
+| 1 | 519.2 +/- 17.9 | 7.38 [7.11-7.49] | n/a | n/a (one island) | n/a |
+| 2 | 454.8 +/- 40.4 | 8.00 [7.92-8.02] | 14.84 [13.99-15.10] | 1.85 times faster | yes, 5 of 5 seeds |
+| 4 | 424.2 +/- 33.6 | 8.13 [8.09-8.39] | 28.84 [28.67-28.87] | 3.55 times faster | yes, 5 of 5 seeds |
 <!-- END:islands32 -->
 
 <!-- BEGIN:islands100 -->
 | Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | Same islands one after another (s), median [IQR] | Speed-up | Same result? |
 |---:|---:|---:|---:|---:|---|
-| 1 | 1,070.0 +/- 100.6 | 36.90 [36.66-37.27] | n/a | n/a (one island) | n/a |
-| 2 | 1,005.6 +/- 51.7 | 39.23 [38.73-39.69] | 74.46 [74.16-74.48] | 1.90 times faster | yes, 5 of 5 seeds |
-| 4 | 967.6 +/- 47.5 | 40.34 [39.78-41.25] | 149.66 [148.67-150.58] | 3.71 times faster | yes, 5 of 5 seeds |
+| 1 | 1,070.0 +/- 100.6 | 15.30 [15.25-15.48] | n/a | n/a (one island) | n/a |
+| 2 | 1,005.6 +/- 51.7 | 16.86 [16.73-16.87] | 30.50 [30.34-30.67] | 1.81 times faster | yes, 5 of 5 seeds |
+| 4 | 967.6 +/- 47.5 | 17.59 [17.39-18.05] | 60.69 [60.12-61.25] | 3.45 times faster | yes, 5 of 5 seeds |
 <!-- END:islands100 -->
 
 <!-- BEGIN:quick40 -->
@@ -62,9 +62,9 @@
 <!-- BEGIN:fitness -->
 | Population | Python loop, 1 process (ms) | Python loop, 4-process pool (ms) | NumPy, 1 process (ms) | NumPy, 4-process pool (ms) | Whole GA generation (ms) |
 |---:|---:|---:|---:|---:|---:|
-| 500 | 3.9 [3.8-4.2] | 4.2 [3.9-4.6] | 0.4 [0.4-0.6] | 2.3 [2.3-2.8] | 43.8 [43.2-45.7] |
-| 2,000 | 15.9 [15.3-16.7] | 12.7 [11.7-18.0] | 1.7 [1.6-2.0] | 6.4 [5.4-12.8] | 177.2 [173.7-179.0] |
-| 10,000 | 82.7 [81.3-89.5] | 55.5 [47.8-66.4] | 10.1 [9.1-10.7] | 27.2 [26.1-31.6] | 962.9 [914.9-989.1] |
+| 500 | 2.4 [2.3-2.6] | 3.3 [2.9-3.8] | 0.3 [0.2-0.4] | 1.8 [1.6-2.4] | 20.8 [19.6-28.3] |
+| 2,000 | 10.6 [10.1-18.0] | 9.5 [8.4-10.0] | 1.3 [1.1-1.5] | 4.0 [3.6-4.2] | 87.1 [74.7-117.5] |
+| 10,000 | 49.1 [47.0-49.9] | 31.7 [28.3-36.8] | 5.9 [5.3-6.8] | 14.9 [14.2-16.5] | 394.6 [375.4-425.6] |
 <!-- END:fitness -->
 
 <!-- BEGIN:tuning -->
@@ -100,7 +100,7 @@
 <!-- BEGIN:bestfound -->
 | Map | Shortest tour found in this study | Found by | Results file |
 |---:|---:|---|---|
-| 32 nodes | 308 | OR-Tools reference (not proven optimal) | `results/reference_ortools.json` |
-| 100 nodes | 338 | OR-Tools reference (not proven optimal) | `results/reference_ortools.json` |
+| 32 nodes | 308 | OR-Tools reference, best of 5 repeats with a 30 s time limit (not proven optimal) | `results/reference_ortools.json` |
+| 100 nodes | 338 | OR-Tools reference, best of 5 repeats with a 30 s time limit (not proven optimal) | `results/reference_ortools.json` |
 <!-- END:bestfound -->
 

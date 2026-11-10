@@ -1,13 +1,13 @@
 {
  "experiment": "reference_ortools",
  "environment": {
-  "timestamp_utc": "2026-10-21T22:51:54+00:00",
+  "timestamp_utc": "2026-11-10T18:58:45+00:00",
   "python": "3.12.3",
-  "os": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "os": "Linux-6.18.44-fc-v338-x86_64-with-glibc2.39",
   "machine": "x86_64",
   "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
   "nproc": 4,
-  "ram_bytes": 16874930176,
+  "ram_bytes": 16867737600,
   "machine_note": "shared cloud VM (4 vCPU); timings can vary between runs",
   "mpiexec": "mpiexec (OpenRTE) 4.1.6",
   "packages": {
@@ -18,9 +18,9 @@
    "route-ga": "1.0.0"
   },
   "code": {
-   "src_commit": "71e3f5eb47641d5953beab5979d6d9130e20a32c",
+   "src_commit": "c3f2fdbb2f533a6f3066708baa397537d82d9c54",
    "src_dirty": false,
-   "head_commit": "ec506a8c7bfd22a451bab2c8d55579098c5a3892",
+   "head_commit": "e8b8d294be2fbd4e4e74d0579ae2d51aed3a25bc",
    "scripts_dirty": false
   }
  },
@@ -31,7 +31,7 @@
  "note": "the search stops at a 30 s time limit, so the tour found can depend on machine speed: a slower machine searches less in the same time",
  "speed_check": {
   "what": "single GA run, map 32, seed 0, 1000 generations",
-  "this_machine_s": 7.737192850999975,
+  "this_machine_s": 7.130857037000169,
   "earlier_vm_s": 9.2,
   "earlier_vm": "2026-10-17 re-run, same code and settings; OR-Tools found 338 on the 100-node map there"
  },
@@ -80,7 +80,7 @@
      ],
      "objective": 308,
      "time_limit_s": 30,
-     "elapsed_s": 30.000177994999994,
+     "elapsed_s": 30.000560925000173,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -125,7 +125,7 @@
      ],
      "objective": 308,
      "time_limit_s": 30,
-     "elapsed_s": 29.999852664000002,
+     "elapsed_s": 30.000673602999996,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -170,7 +170,7 @@
      ],
      "objective": 308,
      "time_limit_s": 30,
-     "elapsed_s": 30.000751816999994,
+     "elapsed_s": 30.00053399599983,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -215,7 +215,7 @@
      ],
      "objective": 308,
      "time_limit_s": 30,
-     "elapsed_s": 30.000760569000022,
+     "elapsed_s": 30.000673088999974,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -260,7 +260,7 @@
      ],
      "objective": 308,
      "time_limit_s": 30,
-     "elapsed_s": 30.000714106000004,
+     "elapsed_s": 30.000766776999626,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     }
    ],
@@ -421,7 +421,7 @@
      ],
      "objective": 338,
      "time_limit_s": 30,
-     "elapsed_s": 30.00032233099998,
+     "elapsed_s": 30.000293473000056,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -534,7 +534,7 @@
      ],
      "objective": 338,
      "time_limit_s": 30,
-     "elapsed_s": 30.00022537199999,
+     "elapsed_s": 30.000188918000276,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -647,7 +647,7 @@
      ],
      "objective": 338,
      "time_limit_s": 30,
-     "elapsed_s": 30.00028391799998,
+     "elapsed_s": 30.00001121400055,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -760,7 +760,7 @@
      ],
      "objective": 338,
      "time_limit_s": 30,
-     "elapsed_s": 30.000111742,
+     "elapsed_s": 30.00009547799982,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     },
     {
@@ -873,7 +873,7 @@
      ],
      "objective": 338,
      "time_limit_s": 30,
-     "elapsed_s": 30.00021544699996,
+     "elapsed_s": 30.00120944400078,
      "strategy": "PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH"
     }
    ],

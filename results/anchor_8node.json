@@ -1,13 +1,13 @@
 {
  "experiment": "anchor_8node",
  "environment": {
-  "timestamp_utc": "2026-10-21T03:20:13+00:00",
+  "timestamp_utc": "2026-11-10T18:33:47+00:00",
   "python": "3.12.3",
-  "os": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "os": "Linux-6.18.44-fc-v338-x86_64-with-glibc2.39",
   "machine": "x86_64",
-  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
   "nproc": 4,
-  "ram_bytes": 16874930176,
+  "ram_bytes": 16867737600,
   "machine_note": "shared cloud VM (4 vCPU); timings can vary between runs",
   "mpiexec": "mpiexec (OpenRTE) 4.1.6",
   "packages": {
@@ -18,9 +18,9 @@
    "route-ga": "1.0.0"
   },
   "code": {
-   "src_commit": "71e3f5eb47641d5953beab5979d6d9130e20a32c",
+   "src_commit": "c3f2fdbb2f533a6f3066708baa397537d82d9c54",
    "src_dirty": false,
-   "head_commit": "23f02ece5f3b4661adb938380cd95cbc55dfd8bf",
+   "head_commit": "e8b8d294be2fbd4e4e74d0579ae2d51aed3a25bc",
    "scripts_dirty": false
   }
  },
