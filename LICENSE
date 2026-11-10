@@ -19,8 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-The MIT licence covers my own code (src/, scripts/, tests/, docs/). The
-distance matrices in data/ and the files in original_2025/ that were provided
-by DSAI3202 course staff (UDST, Spring 2025) are included for reference and
-are not relicensed; see data/README.md and original_2025/README.md.
