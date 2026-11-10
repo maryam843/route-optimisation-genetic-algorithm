@@ -1,12 +1,12 @@
 """Fitness evaluation in a process pool.
 
-The 2025 script sent lambdas to a ``ProcessPoolExecutor`` and crashed with a
+The earlier script sent lambdas to a ``ProcessPoolExecutor`` and crashed with a
 PicklingError. Everything sent to a worker here is a module-level function
 or plain data, so it pickles, and the pool is created with the ``spawn``
 start method so it behaves the same on Linux, macOS and Windows.
 
 Two kernels are available so the benchmark can compare like with like:
-``"python"`` loops over the edges of each route (the 2025 style) and
+``"python"`` loops over the edges of each route (the earlier style) and
 ``"numpy"`` uses the vectorised :func:`route_ga.route.population_costs`.
 """
 

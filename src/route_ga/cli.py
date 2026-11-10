@@ -35,7 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     src = p.add_mutually_exclusive_group()
     src.add_argument("--map", type=int, choices=sorted(MAP_FILES), default=32,
-                     help="course map to use (default: 32)")
+                     help="map to use (default: 32)")
     src.add_argument("--matrix", type=Path, help="path to another distance-matrix CSV")
     p.add_argument("--method", choices=METHODS, default="ga", help="default: ga")
     p.add_argument("--seed", type=int, default=0, help="random seed (default: 0)")

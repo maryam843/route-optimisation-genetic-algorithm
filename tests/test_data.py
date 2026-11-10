@@ -5,7 +5,7 @@ from route_ga.data import MISSING_EDGE, is_symmetric, load_map, load_matrix, mis
 
 
 @pytest.mark.parametrize(("n", "missing"), [(32, 192), (100, 1900)])
-def test_course_maps_shape_and_missing_edges(n, missing):
+def test_maps_shape_and_missing_edges(n, missing):
     d = load_map(n)
     assert d.shape == (n, n)
     assert int(missing_mask(d).sum()) == missing

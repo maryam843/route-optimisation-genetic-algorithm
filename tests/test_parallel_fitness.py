@@ -30,7 +30,7 @@ def test_python_kernel_matches_numpy():
 
 
 def test_worker_function_is_picklable():
-    # The 2025 code sent lambdas; module-level functions pickle fine.
+    # The earlier code sent lambdas; module-level functions pickle fine.
     assert pickle.loads(pickle.dumps(_chunk_costs)) is _chunk_costs
 
 

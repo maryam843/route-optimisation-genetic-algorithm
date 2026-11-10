@@ -1,12 +1,10 @@
 """Genetic algorithm for a single closed delivery tour.
 
-Partly based on course-provided code: the order crossover and swap mutation
-follow ``order_crossover`` and ``mutate`` provided by DSAI3202 course staff
-(UDST, Spring 2025). Modified by me: yes (rewritten on NumPy arrays with an
-explicit random generator; mutation now returns a copy instead of changing
-its input). Tournament selection is my 2025 function, fixed and rewritten in
-2026. Everything else here (elitism, generational loop, stagnation restart,
-migration hooks) is 2026 code.
+Order crossover and swap mutation follow the reference versions supplied with
+the original exercise, rewritten on NumPy arrays (with an explicit random
+generator; mutation returns a copy instead of changing its input).
+Tournament selection is a fixed rewrite of the earlier version. Elitism, the
+generational loop, the stagnation restart and the migration hooks are new.
 
 The GA minimises the tour cost (a positive number). Smaller is better
 everywhere: selection takes the minimum, elites are the lowest costs, and
@@ -74,7 +72,7 @@ def tournament_select(
 
 
 def order_crossover(p1: np.ndarray, p2: np.ndarray, rng: np.random.Generator) -> np.ndarray:
-    """Order crossover (OX), same variant as the course code.
+    """Order crossover (OX), same variant as the reference version.
 
     Copy ``p1[start:end+1]`` into the child, then fill the other positions
     left to right with the remaining nodes in the order they appear in ``p2``.

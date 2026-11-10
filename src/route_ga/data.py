@@ -1,10 +1,10 @@
-"""Load the course distance matrices.
+"""Load the two distance matrices.
 
-The two CSV files in ``data/`` were provided by DSAI3202 course staff (UDST,
-Spring 2025). Modified by me: no. This loader is my 2026 code.
+The two distance tables were supplied with the original exercise and are kept
+byte for byte. Their real-world origin is unknown.
 
 A cell >= ``MISSING_EDGE`` (100000) means there is no road between two nodes.
-The 2025 code compared against 10000, so the penalty never fired.
+The earlier code compared against 10000, so the penalty never fired.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ def load_matrix(path: str | Path) -> np.ndarray:
 
 
 def load_map(n_nodes: int) -> np.ndarray:
-    """Load the 32-node or the 100-node course map."""
+    """Load the 32-node or the 100-node map."""
     if n_nodes not in MAP_FILES:
         raise ValueError(f"unknown map {n_nodes}; choose from {sorted(MAP_FILES)}")
     return load_matrix(DATA_DIR / MAP_FILES[n_nodes])

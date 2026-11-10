@@ -1,4 +1,4 @@
-"""Island model: serial twin, in-process MPI, and mpiexec integration (T4)."""
+"""Island model: serial twin, in-process MPI, and mpiexec integration."""
 
 import json
 import subprocess

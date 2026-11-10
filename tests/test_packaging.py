@@ -1,4 +1,4 @@
-"""A non-editable install must find the course maps (package data)."""
+"""A non-editable install must find the two maps (package data)."""
 
 import subprocess
 import sys

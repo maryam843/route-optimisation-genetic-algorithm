@@ -2,7 +2,7 @@
 
 All functions work on a cost matrix (see :func:`route_ga.route.cost_matrix`)
 and return an individual: a permutation of the nodes 1..n-1 with the depot
-left implicit. 2-opt assumes a symmetric matrix, which both course maps are.
+left implicit. 2-opt assumes a symmetric matrix, which both maps are.
 """
 
 from __future__ import annotations

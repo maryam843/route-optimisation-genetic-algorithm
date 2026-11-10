@@ -32,7 +32,7 @@ PATTERNS = {
     "private_key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "github_token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36}\b|github_pat_[A-Za-z0-9_]{20,}"),
     "api_key": re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b|\bxox[abprs]-[A-Za-z0-9-]{10,}"),
-    "password_assignment": re.compile(
+    "password_value": re.compile(
         r"(?i)\b(pass(word)?|secret|token)\s*[:=]\s*['\"][^'\"]{4,}['\"]"),
     "azure_conn": re.compile(r"AccountKey=[A-Za-z0-9+/=]{20,}"),
     "user_path": re.compile(

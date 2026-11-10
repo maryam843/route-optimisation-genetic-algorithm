@@ -1,7 +1,7 @@
 # Data
 
-Provided by DSAI3202 course staff (UDST, Spring 2025). Modified by me: no
-(both files are kept byte for byte as supplied).
+The two distance tables were supplied with the original exercise and are kept
+byte for byte. Their real-world origin is unknown.
 
 | File | Size | Nodes | Missing edges (cells equal to 100000) |
 |---|---|---|---|

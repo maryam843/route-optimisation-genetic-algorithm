@@ -21,7 +21,7 @@ reference = ["ortools>=9.10"]
 route-ga = "route_ga.cli:main"
 
 [tool.setuptools]
-# The course maps stay in data/ at the repo root and are shipped inside the
+# The two maps stay in data/ at the repo root and are shipped inside the
 # package as route_ga.maps, so a non-editable install can find them.
 packages = ["route_ga", "route_ga.maps"]
 package-dir = { "" = "src", "route_ga.maps" = "data" }

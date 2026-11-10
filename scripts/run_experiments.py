@@ -53,7 +53,7 @@ REFERENCE_TIME_LIMIT_S = 30
 # 2026-10-17 re-run, where OR-Tools found 338 on the 100-node map.
 SPEED_CHECK_EARLIER_S = 9.2
 MACHINE_NOTE: str | None = None
-MISSING_SHARE = 0.19  # share of missing edges in both course maps (192/992, 1900/9900)
+MISSING_SHARE = 0.19  # share of missing edges in both maps (192/992, 1900/9900)
 
 
 def generations_to_converge(history: list[float]) -> int:

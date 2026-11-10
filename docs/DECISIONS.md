@@ -7,17 +7,17 @@ An individual is a permutation of the customer nodes 1..n-1; the depot 0 is
 not stored. The closed tour is always built as `[0, *perm, 0]`.
 **Why:** the depot can never move, be duplicated or be lost, so crossover and
 mutation only ever need to keep a plain permutation valid, and the return leg
-to the depot is added in exactly one place (`route.py`). The 2025 code stored
+to the depot is added in exactly one place (`route.py`). The earlier code stored
 the depot inside the route and forgot the return leg.
 
 ## Fitness sign and missing edges
 The GA minimises a positive cost: the tour length, where every missing edge
 (cell >= 100000) costs 100000.
-**Why:** one direction everywhere (lower is better) removes the 2025 bug where
+**Why:** one direction everywhere (lower is better) removes the earlier bug where
 negative fitness was combined with `min`/`argmin`. The penalty is larger than
 any feasible tour on these maps (at most 99 per edge, so under 10,000 for 100
 nodes), so any tour with fewer missing edges always ranks first. Using `>=`
-instead of `==` also covers the 10000 vs 100000 mismatch from 2025.
+instead of `==` also covers the 10000 vs 100000 mismatch in the earlier code.
 
 ## Selection
 Tournament selection, size 3, lowest cost wins, contestants drawn without
@@ -29,30 +29,30 @@ tournament of the whole population return the best individual, which a unit
 test checks.
 
 ## Crossover
-Order crossover (OX), the same variant as the course code, rate 0.9.
+Order crossover (OX), the same variant as the reference version, rate 0.9.
 **Why:** it keeps a block of one parent's order and the relative order of the
 other, and always produces a valid permutation (a property test checks this).
-I kept the course variant so the 2025 and 2026 operators can be compared.
+I kept the reference variant so the earlier and current operators can be compared.
 
 ## Mutation
 Swap two random positions with probability 0.3 per child. Returns a copy.
-**Why:** swap mutation was the course operator and the brief asked for it.
-0.3 was best of {0.1, 0.3, 0.6, 0.9} in the tuning grid (see Tuning below). The 2025 `mutate`
+**Why:** swap mutation was the reference operator of the original exercise.
+0.3 was best of {0.1, 0.3, 0.6, 0.9} in the tuning grid (see Tuning below). The earlier `mutate`
 changed its input in place, which is easy to get wrong with shared parents, so
 the new one copies. I know an inversion (2-opt style) mutation would fit TSP
-better; I did not add it so the GA stays the one described in the brief, and
+better; I did not add it so the GA keeps the original operators, and
 2-opt is used as a separate polish step instead.
 
 ## Elitism
 The 2 best individuals are copied unchanged into the next generation.
 **Why:** it guarantees that the best cost in the population never gets worse,
-which is exactly the property the 2025 code broke. The regression test checks
+which is exactly the property the earlier code broke. The regression test checks
 it on every generation.
 
 ## Stagnation restart
 If the best cost does not improve for 150 generations, keep the elites and
 replace everyone else with random tours.
-**Why:** the course skeleton had a restart idea (limit 5, which restarted
+**Why:** the earlier code had a restart idea (limit 5, which restarted
 almost every few generations). A longer limit gives the population time to
 converge first; keeping the elites keeps the monotone guarantee.
 
@@ -61,7 +61,7 @@ Population 200; 1,000 generations on the 32-node map and 2,000 on the
 100-node map; 5 seeds (0 to 4) for every reported number.
 **Why:** a single-population GA run takes seconds to about half a minute here,
 so 5 seeds of every method, including the serial and MPI island runs, fit in
-well under an hour on a 4-core machine. The 2025 script used population
+well under an hour on a 4-core machine. The earlier script used population
 10,000 with only 2 children per generation, so it barely evolved.
 
 ## Island topology
