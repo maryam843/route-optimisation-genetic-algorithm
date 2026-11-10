@@ -8,9 +8,9 @@ Checks:
 3. Every number in the README text (and in --report / --skills files) is found
    in results/*.json, in the rendered tables, in the data files, or in the short
    ``CITED`` list below (each with its source). Exempt: code spans and code
-   blocks, URLs, hashes, dates, versions, identifiers like A1-P2,
-   file:line references, "N/10" rubric scores, whole numbers 0 to 10, and the
-   years 2025 and 2026.
+   blocks, URLs, hashes, dates, versions, identifiers like route_ga,
+   file:line references, "N/10" rubric scores, whole numbers 0 to 10, and
+   four-digit years from 2020 to 2030.
 4. Every results/*.json was produced from the last commit that changed src/,
    with no uncommitted changes in src/. Skipped, with the reason printed, when
    there is no full git history (a ZIP download or a shallow clone).
@@ -39,14 +39,16 @@ BLOCK = re.compile(r"<!-- BEGIN:(\w+) -->\n(.*?)\n<!-- END:\1 -->", re.DOTALL)
 
 # Numbers that do not come from results/, each with its source.
 CITED = {
-    "25": "share of the 2025 code that was mine (lower bound), from my review of the 2025 files",
-    "30": "share of the 2025 code that was mine (upper bound), same review",
-    # 2025 loop with the process pool removed (population 300, 60 generations,
-    # seed 42), measured before the 2025 code was taken out of the repo.
-    "1,300,840": "2025 route called 'best', generation 0",
-    "1,400,983": "2025 route called 'best', last generation",
-    "101,498": "2025 shortest route in the population, generation 0",
-    "201,175": "2025 shortest route in the population, last generation",
+    "25": "share of the earlier code written for this project (lower bound), from a review "
+          "of the earlier files",
+    "30": "share of the earlier code written for this project (upper bound), same review",
+    # Earlier code's loop with the process pool removed (population 300,
+    # 60 generations, seed 42), measured before the earlier code was taken out
+    # of the repo. Costs count 100,000 per missing road.
+    "1,300,840": "earlier code: route called 'best', generation 0",
+    "1,400,983": "earlier code: route called 'best', last generation",
+    "101,498": "earlier code: shortest route in the population, generation 0",
+    "201,175": "earlier code: shortest route in the population, last generation",
 }
 
 NUMBER = re.compile(r"(?<![\w.:/#@$\\-])-?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?=x\b|(?![\w.]\w))")
@@ -229,7 +231,8 @@ def check_numbers(text: str, allowed: set[str], label: str) -> list[str]:
         for m in NUMBER.finditer(line):
             tok = m.group(0).lstrip("-")
             plain = tok.replace(",", "")
-            if "." not in plain and int(plain) <= 10 or plain in ("2025", "2026"):
+            is_year = "," not in tok and "." not in plain and 2020 <= int(plain) <= 2030
+            if "." not in plain and int(plain) <= 10 or is_year:
                 continue
             if tok in allowed or plain in allowed:
                 continue
