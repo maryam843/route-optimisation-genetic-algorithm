@@ -1,14 +1,14 @@
 {
  "experiment": "quality",
  "environment": {
-  "timestamp_utc": "2026-10-21T22:57:12+00:00",
+  "timestamp_utc": "2026-11-10T23:26:41+00:00",
   "python": "3.12.3",
-  "os": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "os": "Linux-6.18.44-fc-v338-x86_64-with-glibc2.39",
   "machine": "x86_64",
-  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.30GHz",
   "nproc": 4,
-  "ram_bytes": 16874930176,
-  "machine_note": "shared cloud VM (4 vCPU); timings can vary between runs",
+  "ram_bytes": 16867737600,
+  "machine_note": null,
   "mpiexec": "mpiexec (OpenRTE) 4.1.6",
   "packages": {
    "numpy": "2.5.3",
@@ -18,9 +18,9 @@
    "route-ga": "1.0.0"
   },
   "code": {
-   "src_commit": "71e3f5eb47641d5953beab5979d6d9130e20a32c",
+   "src_commit": "c3f2fdbb2f533a6f3066708baa397537d82d9c54",
    "src_dirty": false,
-   "head_commit": "b02bf19ac42f2cf3312d8772c035a1c301c2c842",
+   "head_commit": "e8b8d294be2fbd4e4e74d0579ae2d51aed3a25bc",
    "scripts_dirty": false
   }
  },
@@ -48,13 +48,13 @@
  },
  "code": {
   "python_lines": {
-   "src": 1076,
+   "src": 1074,
    "tests": 981,
-   "scripts": 1523
+   "scripts": 1532
   },
   "tracked_files": 62,
-  "tracked_bytes": 1851243,
+  "tracked_bytes": 1851792,
   "largest_file": "results/map100.json",
-  "largest_file_bytes": 524601
+  "largest_file_bytes": 524644
  }
 }
