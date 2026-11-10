@@ -90,13 +90,14 @@ def table_map(res: dict, results_dir: Path) -> str:
             f"{gap(s['mean'], base)} | {gap(s['mean'], refc)} | {med_iqr(s['time'])} | {gens} |")
     ref = load(results_dir, "reference_ortools")
     if ref and str(n) in ref["maps"]:
-        r = ref["maps"][str(n)]
-        costs = r["costs"]
-        mu = sum(costs) / len(costs)
-        sd = (sum((c - mu) ** 2 for c in costs) / (len(costs) - 1)) ** 0.5 if len(costs) > 1 else 0
+        # Time-limited search: a single repeat can stop at a longer tour on a
+        # slower machine, so the reference is the best of the repeats.
+        costs = ref["maps"][str(n)]["costs"]
+        best_ref = min(costs)
         lines.append(
-            f"| {LABELS['ortools']} | {ms(mu, sd)} ({len(costs)} repeats) | {min(costs):,.0f} | "
-            f"{gap(mu, base)} | {gap(mu, refc)} | {ref['time_limit_s']} (time limit) | n/a |")
+            f"| {LABELS['ortools']} | best of {len(costs)} repeats: {best_ref:,.0f} | "
+            f"{best_ref:,.0f} | {gap(best_ref, base)} | {gap(best_ref, refc)} | "
+            f"{ref['time_limit_s']} (time limit) | n/a |")
     return "\n".join(lines)
 
 
@@ -106,7 +107,12 @@ def table_best(results_dir: Path) -> str:
     for n in (32, 100):
         b = best_found(results_dir, n)
         if b:
-            lines.append(f"| {n} nodes | {b[0]:,.0f} | {LABELS[b[1]]} | `{b[2]}` |")
+            who = LABELS[b[1]]
+            if b[1] == "ortools":
+                ref = load(results_dir, "reference_ortools")
+                who = (f"OR-Tools reference, best of {len(ref['maps'][str(n)]['costs'])} repeats "
+                       f"with a {ref['time_limit_s']} s time limit (not proven optimal)")
+            lines.append(f"| {n} nodes | {b[0]:,.0f} | {who} | `{b[2]}` |")
     return "\n".join(lines)
 
 
