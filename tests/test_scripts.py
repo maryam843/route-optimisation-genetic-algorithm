@@ -9,6 +9,8 @@ from pathlib import Path
 import pytest
 from conftest import ROOT, mpi_available
 
+from route_ga.provenance import mpiexec_version
+
 sys.path.insert(0, str(ROOT / "scripts"))
 import check_readme_claims  # noqa: E402
 import make_figures  # noqa: E402
@@ -40,7 +42,9 @@ def test_quick_results_have_provenance(quick_results):
         assert "cpu_model" in env and "ram_bytes" in env
         assert "mpiexec" in env
         if MPI_OK:
-            assert "mpi" in env["mpiexec"].lower()
+            # Recorded exactly as the launcher reports it. Open MPI 5 on Ubuntu
+            # 26.04 gives no version line on stdout, so the value can be None.
+            assert env["mpiexec"] == mpiexec_version()
         assert env["code"]["src_commit"] is None or len(env["code"]["src_commit"]) == 40
     assert (quick_results / "tables.md").exists()
 
