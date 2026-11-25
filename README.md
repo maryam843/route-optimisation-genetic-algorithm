@@ -19,10 +19,10 @@ Plans the shortest round trip for one delivery van through 32 or 100 stops, wher
 
 Two symmetric distance tables, supplied with the original exercise and credited in [`data/README.md`](data/README.md):
 
-| File | Stops | Size | Missing roads (cells equal to 100000) |
+| File | Stops | Matrix | Missing roads (cells equal to 100000) |
 |---|---:|---:|---:|
-| `data/city_distances.csv` | 32 | 5,888 B | 192 |
-| `data/city_distances_extended.csv` | 100 | 57,084 B | 1,900 |
+| `data/city_distances.csv` | 32 | 32 x 32 | 192 |
+| `data/city_distances_extended.csv` | 100 | 100 x 100 | 1,900 |
 
 - Stop 0 is the depot. Real distances are whole numbers from 1 to 99; 100000 means there is no road.
 - The real-world origin is unknown and no licence is stated. The numbers have no units and are not coordinates, so tour lengths are plain distance units.
