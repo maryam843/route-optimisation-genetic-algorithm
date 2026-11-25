@@ -38,18 +38,7 @@ from results_tables import load, render_all  # noqa: E402
 BLOCK = re.compile(r"<!-- BEGIN:(\w+) -->\n(.*?)\n<!-- END:\1 -->", re.DOTALL)
 
 # Numbers that do not come from results/, each with its source.
-CITED = {
-    "25": "share of the earlier code written for this project (lower bound), from a review "
-          "of the earlier files",
-    "30": "share of the earlier code written for this project (upper bound), same review",
-    # Earlier code's loop with the process pool removed (population 300,
-    # 60 generations, seed 42), measured before the earlier code was taken out
-    # of the repo. Costs count 100,000 per missing road.
-    "1,300,840": "earlier code: route called 'best', generation 0",
-    "1,400,983": "earlier code: route called 'best', last generation",
-    "101,498": "earlier code: shortest route in the population, generation 0",
-    "201,175": "earlier code: shortest route in the population, last generation",
-}
+CITED: dict[str, str] = {}
 
 NUMBER = re.compile(r"(?<![\w.:/#@$\\-])-?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?=x\b|(?![\w.]\w))")
 EXEMPT_SPANS = [

@@ -1,98 +1,47 @@
 # Route optimisation with a genetic algorithm
 
-A genetic algorithm (GA), classic baselines and an MPI island model for one delivery van that starts at a depot, visits every stop once and comes back.
+[![CI](https://github.com/maryam843/route-optimisation-genetic-algorithm/actions/workflows/ci.yml/badge.svg)](https://github.com/maryam843/route-optimisation-genetic-algorithm/actions/workflows/ci.yml)
 
-Originally built for DSAI3202 Parallel & Distributed Computing, UDST, Spring 2025. Rebuilt and extended in 2026.
+Plans the shortest round trip for one delivery van through 32 or 100 stops, where some pairs of stops have no road, and compares a genetic algorithm (GA), its MPI island version, simple baselines and the Google OR-Tools reference solver.
 
-## In plain English
+## Key results
 
-- **What it is:** a small Python package that plans the shortest round trip for one delivery van through 32 or 100 stops.
-- **The problem:** every extra kilometre costs fuel and driver time, and some pairs of stops have no road between them, so a plan has to avoid those.
-- **How it works:** it reads a table of distances between stops, builds many candidate routes, keeps and mixes the shorter ones for 1,000 to 2,000 generations (the GA), can run several populations in parallel with MPI, and saves the best route with its length to a JSON file.
-- **2025 vs 2026:** in 2025 I completed two functions of a course-provided GA and tried to parallelise it; it crashed and, once it ran, kept the worst routes. In 2026 I fixed every bug, rebuilt it as a tested package, and added baselines, an MPI island model, a reference solver and measured experiments.
-- **Main result (with the caveat):** my GA is not competitive. On the 100-node map it averaged 1,061, simple nearest neighbour + 2-opt found 434, and the OR-Tools reference solver found 338. What does work is the MPI version: identical routes to the serial version, 3.45 times faster with 4 MPI processes on one 4-core machine.
-- **Why it matters:** last-mile delivery in Qatar and the Gulf is a routing problem at its core; this project shows I can fix broken optimisation code, measure it honestly against baselines and distribute it with MPI.
+- **The GA does not beat the baselines.** On the 100-stop map the GA averaged 1,061 over 5 seeds (553 after a 2-opt polish, 528 for 4 MPI islands + 2-opt). Nearest neighbour + 2-opt found 434 in well under a second, and the OR-Tools reference found 338 (best of 5 repeats with a 30 s limit, not proven optimal).
+- **Same order on the 32-stop map:** GA 520, GA + 2-opt polish 398, nearest neighbour + 2-opt 364, OR-Tools reference 308.
+- **The MPI island model is correct and faster:** identical routes to the serial run on 5 of 5 seeds, and 3.45 times faster with 4 MPI processes on one 4-core machine (100 stops; 3.55 times faster on 32 stops).
+- **94 tests pass** with 92.4 % coverage, and CI checks every table and number in this README against `results/`.
 
-## The problem
+![Best tour length per generation on the 100-stop map for the single GA and 1, 2 and 4 MPI islands, levelling off far above the nearest neighbour + 2-opt result of 434](figures/convergence_100.png)
 
-A van leaves the depot (node 0), visits every other stop exactly once, and returns to the depot. The goal is the shortest total distance. This is the travelling salesman problem (TSP). Some pairs of stops have no direct road; a route that uses one of those is not allowed.
+**Tools:** Python, NumPy, multiprocessing, mpi4py, Open MPI, Google OR-Tools, Matplotlib, pytest, Hypothesis, Ruff, GitHub Actions
 
 ## Data
 
-Two distance matrices provided by the course (see `data/README.md`):
+Two symmetric distance tables, supplied with the original exercise and credited in [`data/README.md`](data/README.md):
 
-| File | Stops | Missing roads (cells equal to 100000) |
-|---|---:|---:|
-| `data/city_distances.csv` | 32 | 192 |
-| `data/city_distances_extended.csv` | 100 | 1,900 |
+| File | Stops | Size | Missing roads (cells equal to 100000) |
+|---|---:|---:|---:|
+| `data/city_distances.csv` | 32 | 5,888 B | 192 |
+| `data/city_distances_extended.csv` | 100 | 57,084 B | 1,900 |
 
-Both are symmetric, real distances are whole numbers from 1 to 99, and about 19 % of the pairs have no road. Where the numbers came from in the real world is unknown; they are not coordinates.
+- Stop 0 is the depot. Real distances are whole numbers from 1 to 99; 100000 means there is no road.
+- The real-world origin is unknown and no licence is stated. The numbers have no units and are not coordinates, so tour lengths are plain distance units.
+- Both files are small, so they are kept in the repo byte for byte and also ship inside the package as `route_ga.maps`. Nothing needs to be downloaded.
 
-## Method
+## Approach
 
-### What was 2025 and what is 2026
+1. **Problem:** the van leaves the depot, visits every other stop once and returns (a travelling salesman problem). A tour costs its length plus 100,000 for each missing road used, so a tour with fewer missing roads always wins.
+2. **Baselines:** nearest neighbour, nearest neighbour + 2-opt, and brute force on 100 random 8-stop maps where the exact optimum is known, to check every method against a true answer.
+3. **Reference:** OR-Tools routing (guided local search) with a 30 s time limit and 5 repeats per map. It is the strongest result here but not a proven optimum.
+4. **GA:** 200 random tours, tournament selection of 3, order crossover, swap mutation (rate 0.3), the 2 best tours kept each generation, and a restart after 150 generations without improvement; 1,000 generations on 32 stops and 2,000 on 100. An optional 2-opt polish runs on the final tour.
+5. **Fixes to the starting code:** the order crossover and swap mutation follow versions supplied with the original exercise. The earlier version kept the longest routes, crashed with a PicklingError in its process pool, never penalised missing roads (it checked for 10000, the data uses 100000) and left the tour open. Each fix has a regression test in `tests/test_regressions.py`.
+6. **MPI islands:** each MPI process runs its own population. Every 25 generations it sends its 2 best tours to the next island in a ring, replacing that island's 2 worst. A serial twin runs the same islands in one process, and with the same seed both must give the same tour, which is how the MPI code is tested.
+7. **Parallel scoring check:** a 4-process pool versus vectorised NumPy for scoring a population. NumPy in one process was faster at every size, and scoring was 5.9 ms of a 394.6 ms generation at 10,000 tours, so the parallel effort went into whole islands instead.
+8. **Reproducibility:** seeds 0 to 4 for every result, separate seeds (100, 101, 102) for tuning, and each `results/*.json` stores its settings, machine, package versions and the git commit of `src/`.
 
-| Part | Year | Who |
-|---|---|---|
-| GA skeleton: order crossover, swap mutation, random population, trial script | 2025 | Course staff |
-| `calculate_fitness` and `select_in_tournament` | 2025 | Me (following the brief) |
-| Process pool for crossover and mutation (crashed) | 2025 | Me |
-| Five small tests | 2025 | Me |
-| Every bug fix, the `route_ga` package, baselines, OR-Tools reference, island model with MPI, parallel fitness benchmark, CLI, 94 test cases, experiments, figures, CI | 2026 | Me |
+## Results
 
-About 25-30 % of the 2025 code was mine; the rest was the course skeleton. The 2025 files are kept unchanged (apart from a header saying who wrote them) in `original_2025/`.
-
-### How the GA works, in five lines
-
-1. Start with 200 random routes; each route is an order of the stops, with the depot fixed at both ends.
-2. Score each route by its length, adding 100,000 for every missing road, so any route with fewer missing roads always wins.
-3. Pick parents by small tournaments (3 routes, the shortest wins) and combine two parents with order crossover.
-4. Randomly swap two stops in some children (mutation); copy the 2 best routes unchanged (elitism), so the best route can never get worse.
-5. Repeat for 1,000 or 2,000 generations; if nothing improves for 150 generations, keep the best and restart the rest.
-
-### Baselines and reference
-
-- **Nearest neighbour:** from the depot, always drive to the closest unvisited stop.
-- **2-opt:** take a route and keep reversing any section that makes it shorter, until no reversal helps.
-- **Brute force:** check every possible route; only possible for tiny maps (8 stops = 5,040 routes).
-- **OR-Tools reference:** Google OR-Tools routing (guided local search) with a 30-second limit. It is a reference solver, not proven optimal.
-
-### Island model with MPI
-
-Each MPI process runs its own GA population (an island). Every 25 generations each island sends copies of its 2 best routes to the next island in a ring, which replaces its 2 worst. A serial version runs the same islands one after another in one process; with the same seed both versions give exactly the same route, which is how I checked the MPI code is correct. All runs here are on one machine.
-
-Design choices and the reason for each are in `docs/DECISIONS.md`.
-
-## Results vs baselines
-
-Every number below comes from `scripts/run_experiments.py` and is stored in `results/` with the seeds (0 to 4), settings, machine details, timestamp and the git commit of `src/`. `scripts/check_readme_claims.py` fails if any number in this README is not in `results/`, or if the results were not made from the current code. Machine: Intel(R) Xeon(R) Processor @ 2.10GHz, 4 cores, Linux, Python 3.12.3, NumPy 2.5.3, Open MPI 4.1.6, mpi4py 4.1.2, OR-Tools 9.15.6755. It is a shared cloud VM, so timings can vary between runs; every time is a median with the interquartile range (IQR) over at least 5 runs. "Best found" is the shortest tour any method found in this study; it is not a proven optimum. Nearest neighbour and 2-opt are deterministic, so their spread is 0. Every reported tour uses no missing road.
-
-<!-- BEGIN:bestfound -->
-| Map | Shortest tour found in this study | Found by | Results file |
-|---:|---:|---|---|
-| 32 nodes | 308 | OR-Tools reference, best of 5 repeats with a 30 s time limit (not proven optimal) | `results/reference_ortools.json` |
-| 100 nodes | 338 | OR-Tools reference, best of 5 repeats with a 30 s time limit (not proven optimal) | `results/reference_ortools.json` |
-<!-- END:bestfound -->
-
-### 32-node map
-
-<!-- BEGIN:map32 -->
-| Method | Tour length, mean +/- sd | Best of 5 | Gap to best found | Gap to OR-Tools | Time (s), median [IQR] | Generations to converge |
-|---|---:|---:|---:|---:|---:|---:|
-| Nearest neighbour | 445.0 +/- 0.0 | 445 | 44.5 % | 44.5 % | 0.00 [0.00-0.00] | n/a |
-| Nearest neighbour + 2-opt | 364.0 +/- 0.0 | 364 | 18.2 % | 18.2 % | 0.00 [0.00-0.00] | n/a |
-| GA, single population | 519.6 +/- 29.6 | 493 | 68.7 % | 68.7 % | 6.99 [6.74-7.36] | 668 +/- 280 |
-| GA + 2-opt polish | 397.6 +/- 24.1 | 370 | 29.1 % | 29.1 % | 6.99 [6.74-7.36] | n/a |
-| GA, MPI islands x1 | 519.2 +/- 17.9 | 503 | 68.6 % | 68.6 % | 7.38 [7.11-7.49] | 578 +/- 245 |
-| GA, MPI islands x2 | 454.8 +/- 40.4 | 390 | 47.7 % | 47.7 % | 8.00 [7.92-8.02] | 555 +/- 276 |
-| GA, MPI islands x4 | 424.2 +/- 33.6 | 367 | 37.7 % | 37.7 % | 8.13 [8.09-8.39] | 562 +/- 227 |
-| GA, MPI islands x4 + 2-opt polish | 383.4 +/- 22.5 | 355 | 24.5 % | 24.5 % | 8.13 [8.09-8.39] | n/a |
-| OR-Tools reference (not proven optimal) | best of 5 repeats: 308 | 308 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
-<!-- END:map32 -->
-
-![Method comparison](figures/methods.png)
-
-### 100-node map
+100-stop map, 5 seeds per method. Times are medians [IQR] on a shared 4-vCPU cloud VM (Intel Xeon @ 2.10GHz, Python 3.12.3, Open MPI 4.1.6) and vary between runs. "Best found" is the shortest tour any method found here, not a proven optimum.
 
 <!-- BEGIN:map100 -->
 | Method | Tour length, mean +/- sd | Best of 5 | Gap to best found | Gap to OR-Tools | Time (s), median [IQR] | Generations to converge |
@@ -108,17 +57,37 @@ Every number below comes from `scripts/run_experiments.py` and is stored in `res
 | OR-Tools reference (not proven optimal) | best of 5 repeats: 338 | 338 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
 <!-- END:map100 -->
 
-![Convergence on the 100-node map](figures/convergence_100.png)
+The tables are generated by `scripts/results_tables.py` from `results/*.json` (also in [`results/tables.md`](results/tables.md)), and `scripts/check_readme_claims.py` fails CI if any of them differs.
 
-### What these numbers say
+<details>
+<summary>All other result tables (32-stop map, 8-stop check, MPI scaling, work per run, parallel scoring, short runs, tuning)</summary>
 
-- **My GA loses, and so does 2-opt, to the reference.** On the 100-node map the GA alone averaged 1,061, the GA + 2-opt polish 553 and 4 islands + 2-opt 528. Nearest neighbour + 2-opt found 434 in well under a second, and OR-Tools found 338 (434 is 28.4 % longer). On the 32-node map it is the same order: GA 520, GA + 2-opt 398, nearest neighbour + 2-opt 364, OR-Tools 308.
-- **Why:** swap mutation and order crossover move stops around without looking at distances, so most children are worse than their parents. 2-opt removes crossing edges directly, and OR-Tools combines that kind of move with a smarter search. The GA would need distance-aware operators or local search inside the loop to compete.
-- **More islands help quality.** With the same population per island, 4 islands beat 1 island on both maps (424 vs 519 on 32 nodes, 968 vs 1,070 on 100 nodes), because migration shares good routes between populations that explore differently.
+Shortest tour found in this study:
 
-### Correctness anchor: 8-stop maps with a known optimum
+<!-- BEGIN:bestfound -->
+| Map | Shortest tour found in this study | Found by | Results file |
+|---:|---:|---|---|
+| 32 nodes | 308 | OR-Tools reference, best of 5 repeats with a 30 s time limit (not proven optimal) | `results/reference_ortools.json` |
+| 100 nodes | 338 | OR-Tools reference, best of 5 repeats with a 30 s time limit (not proven optimal) | `results/reference_ortools.json` |
+<!-- END:bestfound -->
 
-100 random 8-stop maps (20 per seed, about 19 % missing roads, like the course maps), each solved exactly by brute force.
+32-stop map:
+
+<!-- BEGIN:map32 -->
+| Method | Tour length, mean +/- sd | Best of 5 | Gap to best found | Gap to OR-Tools | Time (s), median [IQR] | Generations to converge |
+|---|---:|---:|---:|---:|---:|---:|
+| Nearest neighbour | 445.0 +/- 0.0 | 445 | 44.5 % | 44.5 % | 0.00 [0.00-0.00] | n/a |
+| Nearest neighbour + 2-opt | 364.0 +/- 0.0 | 364 | 18.2 % | 18.2 % | 0.00 [0.00-0.00] | n/a |
+| GA, single population | 519.6 +/- 29.6 | 493 | 68.7 % | 68.7 % | 6.99 [6.74-7.36] | 668 +/- 280 |
+| GA + 2-opt polish | 397.6 +/- 24.1 | 370 | 29.1 % | 29.1 % | 6.99 [6.74-7.36] | n/a |
+| GA, MPI islands x1 | 519.2 +/- 17.9 | 503 | 68.6 % | 68.6 % | 7.38 [7.11-7.49] | 578 +/- 245 |
+| GA, MPI islands x2 | 454.8 +/- 40.4 | 390 | 47.7 % | 47.7 % | 8.00 [7.92-8.02] | 555 +/- 276 |
+| GA, MPI islands x4 | 424.2 +/- 33.6 | 367 | 37.7 % | 37.7 % | 8.13 [8.09-8.39] | 562 +/- 227 |
+| GA, MPI islands x4 + 2-opt polish | 383.4 +/- 22.5 | 355 | 24.5 % | 24.5 % | 8.13 [8.09-8.39] | n/a |
+| OR-Tools reference (not proven optimal) | best of 5 repeats: 308 | 308 | 0.0 % | 0.0 % | 30 (time limit) | n/a |
+<!-- END:map32 -->
+
+8-stop maps with a known optimum (100 maps, brute force):
 
 <!-- BEGIN:anchor -->
 | Method | Found the exact optimum | Hit rate per seed, mean +/- sd | Tours using a missing edge | Mean gap to optimum, feasible tours only |
@@ -128,11 +97,7 @@ Every number below comes from `scripts/run_experiments.py` and is stored in `res
 | GA, single population | 62 of 100 | 62 % +/- 14 % | 0 of 100 | 4.2 % |
 <!-- END:anchor -->
 
-The GA here had a population of 50 for 100 generations, so it scored about as many routes (5,000) as brute force checks (5,040) and still missed the optimum on 38 of the 100 maps. Nearest neighbour + 2-opt found it more often (68 of 100) and far faster.
-
-### MPI islands: time and quality on one machine
-
-Each island keeps the full population of 200, so 4 islands do 4 times the work. "One after another" runs the identical islands in one process; the routes are identical, so the speed-up compares the same computation.
+MPI islands vs the same islands run one after another, 32 and 100 stops:
 
 <!-- BEGIN:islands32 -->
 | Islands (MPI processes) | Tour length, mean +/- sd | MPI time (s), median [IQR] | Same islands one after another (s), median [IQR] | Speed-up | Same result? |
@@ -150,11 +115,7 @@ Each island keeps the full population of 200, so 4 islands do 4 times the work. 
 | 4 | 967.6 +/- 47.5 | 17.59 [17.39-18.05] | 60.69 [60.12-61.25] | 3.45 times faster | yes, 5 of 5 seeds |
 <!-- END:islands100 -->
 
-![Island scaling](figures/island_scaling.png)
-
-On the 100-node map the 4 islands ran 3.45 times faster with 4 MPI processes on one 4-core machine, compared with the same 4 islands run one after another (3.55 times faster on the 32-node map). The small rise in MPI time from 1 to 4 islands is migration plus 4 processes sharing the machine.
-
-Each island has a full population, so N islands score about N times as many routes as one population (counted from the saved runs; 2-opt polish not included):
+Fitness evaluations per run (N islands do about N times the work of one population):
 
 <!-- BEGIN:evaluations -->
 | Map | Method | Fitness evaluations per run, mean | Times the single GA | Tour length, mean |
@@ -169,11 +130,7 @@ Each island has a full population, so N islands score about N times as many rout
 | 100 | GA, MPI islands x4 | 1,603,960 | 4.00 | 967.6 |
 <!-- END:evaluations -->
 
-So the better tours with more islands come mostly from more total work, not from parallelism itself; what MPI adds is doing that extra work in about the same wall time.
-
-### Parallel fitness evaluation: when is a process pool worth it?
-
-Time to score one population on the 100-node map: median [IQR] over 5 repeats for each of 5 seeds, with the pool started beforehand (`spawn` method, 4 workers). Pool results were checked equal to the sequential ones.
+Scoring one population on the 100-stop map, ms, median [IQR]:
 
 <!-- BEGIN:fitness -->
 | Population | Python loop, 1 process (ms) | Python loop, 4-process pool (ms) | NumPy, 1 process (ms) | NumPy, 4-process pool (ms) | Whole GA generation (ms) |
@@ -183,19 +140,7 @@ Time to score one population on the 100-node map: median [IQR] over 5 repeats fo
 | 10,000 | 49.1 [47.0-49.9] | 31.7 [28.3-36.8] | 5.9 [5.3-6.8] | 14.9 [14.2-16.5] | 394.6 [375.4-425.6] |
 <!-- END:fitness -->
 
-- A 4-process pool only helps the slow plain-Python loop, and only from about 2,000 routes up.
-- Vectorised NumPy in one process beats the pool at every size; at 10,000 routes the Python-loop pool is 5 times slower than NumPy in one process.
-- Scoring is a small part of a GA generation (5.9 ms of 394.6 ms at 10,000 routes); breeding children dominates. So the parallel fitness step the 2025 brief asked for is not where the time goes. Running whole islands in parallel with MPI is.
-
-### Best route found
-
-![Best route on the 32-node map](figures/best_route_32.png)
-
-The map layout is made from the road distances with multidimensional scaling (MDS). It is only for display; the stops have no real coordinates. The 100-node version is `figures/best_route_100.png`.
-
-### A shorter GA tour from a shorter run
-
-During development a quick 40-generation smoke run (migration every 10 generations) found a 32-node tour of 334 with 4 islands + 2-opt, shorter than the best of the full 1,000-generation runs (355). I re-ran that exact configuration so the number is backed by `results/map32_quick40.json`:
+32-stop map, 40 generations with migration every 10:
 
 <!-- BEGIN:quick40 -->
 | Method (40 generations, migration every 10) | Tour length, mean +/- sd | Best of 5 |
@@ -204,11 +149,7 @@ During development a quick 40-generation smoke run (migration every 10 generatio
 | GA, MPI islands x4 + 2-opt polish | 373.8 +/- 31.1 | 334 |
 <!-- END:quick40 -->
 
-2-opt polish does most of the work and the GA's swap mutation adds little: going from 40 to 1,000 generations moved the single GA's own average a long way (805.6 to 519.6), but its 2-opt-polished average only from 417.8 to 397.6 (`results/map32_quick40.json`, `results/map32.json`). A less converged population also gives 2-opt more varied starting tours, which is how the 40-generation run found 334. It is still well behind OR-Tools (308).
-
-### Parameter tuning
-
-Tournament size and mutation rate were checked on the 32-node map with 3 extra seeds (100, 101, 102) that are not used in any result above, 500 generations each. I had already set tournament 3 and mutation 0.3 before running the grid, and the grid picked the same pair:
+Tuning grid on the 32-stop map (3 tuning seeds, 500 generations):
 
 <!-- BEGIN:tuning -->
 | Tournament size | Mutation rate | Cost, mean +/- sd (3 tuning seeds) |
@@ -227,41 +168,14 @@ Tournament size and mutation rate were checked on the 32-node map with 3 extra s
 | 5 | 0.9 | 562.0 +/- 30.5 |
 <!-- END:tuning -->
 
-## What went wrong in 2025 and how I fixed it
-
-I confirmed each bug by running the 2025 code (`scripts/phase0_check.py`, saved in `results/phase0_2025.json`). The first six bugs below are each pinned by a regression test in `tests/test_regressions_2025.py` (7 test cases; the direction bug has two) that runs the real 2025 code and must fail with the specific exception for that bug (shown as XFAIL), and runs the new code, which must pass. The missing `__main__` guard is caught by the process-pool case on Windows and macOS, where the 2025 script breaks before it reaches the lambdas.
-
-| 2025 bug | What happened | Fix |
-|---|---|---|
-| Wrong direction | Fitness was negative distance, but the loop took the minimum and replaced the best routes. With the pool removed, the route it called "best" went from 1,300,840 to 1,400,983 over 60 generations, and the shortest route in the population went from 101,498 to 201,175. | Minimise a positive cost everywhere; elitism; a test that the best never gets worse. |
-| PicklingError | Lambdas were sent to a process pool, so the script crashed at the first crossover. | Module-level worker functions, a `spawn` pool, tests run under `spawn`. |
-| Missing roads not penalised | The code checked for 10000; the data uses 100000, so the penalty never fired. | Any cell >= 100000 is a missing road and costs 100,000. |
-| Route not closed | The return to the depot was never counted. | Tours are always `[0, ..., 0]`; length includes the return leg. |
-| Result only printed | The final print sat outside the loop and nothing was saved. | Every run writes JSON with the tour, length, history, seed and machine details. |
-| Only ran from `src/` | Data path was relative to the working directory. | Paths relative to the package; runs from anywhere. |
-| No `__main__` guard | Under `spawn` (Windows, macOS) the workers re-ran the script. | A proper CLI; CI runs on Windows too. |
-| Not distributed, not timed, 100-node map unused | None of this was done. | MPI island model, timings, both maps, 5 seeds each. |
+</details>
 
 ## Limitations
 
-- One van only. Several vans with capacities (a vehicle routing problem) is not implemented.
-- Distances are fixed; no traffic, time windows or delivery deadlines.
-- MPI was only run on one machine with 4 cores, not on a cluster of machines, so network cost between machines is not measured.
-- The matrices are course data of unknown real-world origin, so the lengths have no units.
-- "Best found" is only the best tour found here (by OR-Tools). I did not prove it is the shortest possible for the 32- or 100-node maps.
-- The GA settings were checked on the same 32-node map that the results use (with different seeds), so the 32-node GA numbers may be slightly optimistic. The 100-node map was not used for tuning.
-- Timings come from a shared cloud VM and can change from run to run; the medians and IQRs show the spread I saw.
-- My GA uses the course operators (order crossover, swap mutation) and loses to 2-opt and OR-Tools; I did not try stronger operators.
-- The island comparison is not equal work: each island has a full population, so N islands do about N times the fitness evaluations of one. Better tours with more islands come mostly from that extra work, not from parallelism itself.
-
-## What I learned
-
-- I learned to check the direction of an optimiser first: one `min` instead of `max` made my 2025 GA keep the worst routes, and nothing crashed to warn me.
-- I learned that a simple baseline and a strong reference have to come before the fancy method; 2-opt in a few lines and OR-Tools both beat my GA.
-- I learned why lambdas cannot go to a process pool and why code must work under `spawn`.
-- I learned that parallelising the wrong step does not help: scoring was cheap, breeding was the cost.
-- I learned to make MPI code testable by writing a serial twin that must give the same answer.
-- I learned to save every result with its seed, machine and code version so every number in a README can be checked.
+- The GA uses order crossover and swap mutation, which move stops without looking at distances, so it loses to 2-opt and OR-Tools. It would need distance-aware operators or local search inside the loop to compete.
+- One van with fixed distances: no capacities, time windows or traffic. The tables have no units and an unknown origin, so the lengths cannot be turned into real distances or cost.
+- MPI ran on one 4-core machine only, so nothing shows multi-node scaling. Each island has a full population, so better tours with more islands come mostly from more total work, not from migration.
+- OR-Tools stops at a time limit and gives no optimality proof, so its tour can depend on machine speed. The GA settings were tuned on the 32-stop map (other seeds), so the 32-stop GA numbers may be slightly optimistic.
 
 ## How to run
 
@@ -285,14 +199,14 @@ python -m route_ga --map 32 --method ga --seed 0 --polish
 python -m route_ga --map 32 --method ga-islands --islands 4 --seed 0
 ```
 
-MPI islands (Linux; needs Open MPI, for example `sudo apt install openmpi-bin libopenmpi-dev`):
+MPI islands need Open MPI (Linux, for example `sudo apt install openmpi-bin libopenmpi-dev`):
 
 ```bash
 pip install -r requirements-mpi.txt
 mpiexec -n 4 python -m route_ga --map 100 --method ga-islands --seed 0
 ```
 
-Tests, lint, and the checks used in CI:
+Tests, lint and the checks CI runs:
 
 ```bash
 pytest -rsx --cov=route_ga
@@ -301,23 +215,31 @@ python scripts/check_readme_claims.py
 python scripts/pii_scan.py
 ```
 
-Reproduce every result and figure (about half an hour on 4 cores; needs MPI):
+Reproduce every result and figure (needs MPI; under an hour on 4 cores):
 
 ```bash
 python scripts/run_experiments.py
+python scripts/reconcile_runs.py
 python scripts/make_figures.py
 python scripts/record_quality.py
 ```
 
-### Demo video
+## Repo structure
 
-> **PLACEHOLDER:** a short screen recording of a run will go here. Not recorded yet.
+```text
+data/        the two distance tables and their notes
+docs/        DECISIONS.md: design choices and the reason for each
+figures/     PNG figures made by scripts/make_figures.py
+results/     result JSON files and tables.md
+scripts/     experiments, tables, figures, README claims check, PII scan
+src/route_ga/  package: data, route cost, baselines, GA, MPI islands, OR-Tools reference, CLI
+tests/       pytest suite, including regression tests for the fixed bugs
+.github/workflows/ci.yml
+```
 
-## Credits
+## Licence and credits
 
-- Assignment brief, GA skeleton (order crossover, swap mutation, population generator, trial script) and both distance matrices: DSAI3202 course staff, UDST, Spring 2025. Their files are marked in `original_2025/` and `data/README.md`.
-- Libraries: NumPy, Matplotlib, mpi4py, Open MPI, Google OR-Tools, pytest, Hypothesis, Ruff, pandas (only for running the 2025 code).
-
-## Licence
-
-MIT for my code (see `LICENSE`). The course-provided data and 2025 skeleton files are included for reference and are not relicensed.
+- Code: MIT, see [`LICENSE`](LICENSE).
+- Distance tables: supplied with the original exercise, real-world origin unknown, no licence stated; cite as "distance matrices as credited in `data/README.md`".
+- The order crossover and swap mutation follow reference versions supplied with the original exercise, rewritten on NumPy arrays (see the header of `src/route_ga/ga.py`).
+- Libraries: NumPy, mpi4py, Open MPI, Google OR-Tools, Matplotlib, pytest, Hypothesis, Ruff.
