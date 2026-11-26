@@ -9,7 +9,7 @@ Checks:
    in results/*.json, in the rendered tables, in the data files, or in the short
    ``CITED`` list below (each with its source). Exempt: code spans and code
    blocks, URLs, hashes, dates, versions, identifiers like route_ga,
-   file:line references, "N/10" rubric scores, whole numbers 0 to 10, and
+   file:line references, "N/10" scores, whole numbers 0 to 10, and
    four-digit years from 2020 to 2030.
 4. Every results/*.json was produced from the last commit that changed src/,
    with no uncommitted changes in src/. Skipped, with the reason printed, when
